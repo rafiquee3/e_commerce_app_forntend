@@ -1,11 +1,11 @@
-import { css } from '@emotion/css'
+import styled from "styled-components";
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLayoutEffect, useRef } from 'react';
 import { BckgColor, FontColor } from '../../styles/colors';
+import { FC } from "react";
 
 const IMG_SIZE = 40;
-const style = css`
+const FooterElem = styled.footer`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,13 +14,12 @@ const style = css`
   width: 100%;
   height: 180px;
   background: ${BckgColor.FOOTER};
-  margin-top: 8em;
-  padding-bottom: 10px;
+
   p {
     position: absolute;
-    bottom: 0.1em;
-    font-size: 0.7em;
-    color: ${FontColor.DEFAULT};
+    bottom: 0.5em;
+    font-size: 0.8em;
+    color: ${FontColor.BLUE};
   }
   .socialStyle {
     display: flex;
@@ -36,48 +35,43 @@ const style = css`
       height: 50px;
     }
   }
+  .styleLink {
+    height: 40px;
+  }
 `
-const styleLink = css`
-  height: 40px;
-`
-
-const Footer = () => {
+export const Footer: FC = (): JSX.Element => {
   return (
-    <>
-      <footer className={style}>
-        <div className="socialStyle">
-          <Link className={styleLink} href={'/signin'}>
-            <Image
-              src="/linkedin.png"
-              alt="linkedin icon"
-              width={IMG_SIZE}
-              height={IMG_SIZE}
-              className="imgStyle"
-            />
-          </Link>
-          <Link className={styleLink} href={'/signin'}>
-            <Image
-              src="/github.png"
-              alt="github icon"
-              width={IMG_SIZE}
-              height={IMG_SIZE}
-              className="imgStyle"
-            />
-          </Link>
-          <Link className={styleLink} href={'/signin'}>
-            <Image
-              src="/mail.png"
-              alt="email icon"
-              width={IMG_SIZE}
-              height={IMG_SIZE}
-              className="imgStyle"
-            />
-          </Link>
-        </div>
-        <p>© 2023 Rafał Sokołowski - rafiquee3</p>
-      </footer>
-    </>
+    <FooterElem>
+      <div className="socialStyle">
+        <Link className='styleLink' href={'/signin'}>
+          <Image
+            src="/linkedin.png"
+            alt="linkedin icon"
+            width={IMG_SIZE}
+            height={IMG_SIZE}
+            className="imgStyle"
+          />
+        </Link>
+        <Link className='styleLink' href={'/signin'}>
+          <Image
+            src="/github.png"
+            alt="github icon"
+            width={IMG_SIZE}
+            height={IMG_SIZE}
+            className="imgStyle"
+          />
+        </Link>
+        <Link className='styleLink' href={'/signin'}>
+          <Image
+            src="/mail.png"
+            alt="email icon"
+            width={IMG_SIZE}
+            height={IMG_SIZE}
+            className="imgStyle"
+          />
+        </Link>
+      </div>
+      <p>© 2023 Rafał Sokołowski - rafiquee3</p>
+    </FooterElem>
   )
 }
-
-export default Footer;

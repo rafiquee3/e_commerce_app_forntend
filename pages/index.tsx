@@ -24,7 +24,7 @@ const Index: NextPageWithLayout = (): JSX.Element => {
 
 Index.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout>
+    <Layout title="Home page">
       <MainLayout>{page}</MainLayout>
     </Layout>
   )

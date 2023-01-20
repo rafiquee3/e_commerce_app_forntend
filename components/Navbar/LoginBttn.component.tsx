@@ -11,6 +11,7 @@ export const LoginBttn: FC = (): JSX.Element => {
   const Container = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: center;
   `
   useEffect(() => {
       const userLS = (localStorage.getItem('user') || "");
