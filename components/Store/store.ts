@@ -39,4 +39,17 @@ export const useCartStore = create<CartState>((set) => ({
       }
     }); 
   },
+  remItem: (item: ProductType) => {
+    set((state) => {
+      const newItem = { ...item, quantity: 1}
+      const existItem = state.cartItems.find((item) => item.slug === newItem.slug);
+      const cartItems =  existItem ? state.cartItems.map((item) => 
+        item.name === existItem.name ? {...newItem, quantity: item.quantity - 1} : item
+      )
+      : state.cartItems;
+      return {
+        cartItems,
+      }
+    }); 
+  },
 }));
