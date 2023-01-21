@@ -2,6 +2,7 @@ import { Layout } from '@/components/Layout'
 import { ProductDetailLayout } from '@/components/Layout/ProductDetailLayout.component'
 import { AddToCartBox } from '@/components/Product/AddToCartBox.component'
 import { ProductType } from '@/components/Product/ProductItem.component'
+import { useCartStore } from '@/components/Store/store'
 import { data } from '@/utils/data'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Image from 'next/image'
@@ -11,6 +12,8 @@ import { NextPageWithLayout } from '../_app'
 
 const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
   console.log(product)
+  const { cartItems } = useCartStore();
+  console.log(cartItems);
   return (
     <>
       <Link href={'/'}>Powrót</Link>
@@ -26,7 +29,7 @@ const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any
       <div>{product.brand}</div>
       <div>{product.numReviews}</div>
       <div>{product.description}</div>
-      <AddToCartBox price={product.price} stock={product.countInStock} />
+      <AddToCartBox product={product} />
     </>
   )
 }
