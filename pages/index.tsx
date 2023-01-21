@@ -4,6 +4,8 @@ import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 import { useRouter } from 'next/router'
 import { useNavStore, useUserStore } from '@/components/Store/store'
+import { data } from '@/utils/data'
+import { ProductItem } from '@/components/Product/ProductItem.component'
 
 const Index: NextPageWithLayout = (): JSX.Element => {
   const user = useUserStore((state) => state.user);
@@ -15,9 +17,7 @@ const Index: NextPageWithLayout = (): JSX.Element => {
 
   return (
     <>
-        <p>hello word</p>
-         <input type="button" onClick={()=>router.push('/articles/16')}/>
-        {user}
+     {data.products.map(product => <ProductItem key={product.name} {...product}/>)}
     </>
   )
 }
