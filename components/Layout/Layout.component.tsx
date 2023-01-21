@@ -9,6 +9,7 @@ const Main = styled.main`
     flex-direction: column;
     align-items: center;
     width: 100vw;
+    min-height: calc(100vh - 40px - 180px);
     overflow: hidden;
     line-height: 1.5em;
 `
