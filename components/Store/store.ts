@@ -27,9 +27,11 @@ export const useUserStore = create<UserState>((set) => ({
     setUser: (user: string) => set(() => ({ user })),
     // pageMain: () => set((state) => ({ page: 'main' })),
 }))
+type ItemsCookie = CartProductType[] | undefined;
+const cartItemsCookie: ItemsCookie | any = Cookies.get('cartItems');
 export const useCartStore = create<CartState>((set) => ({
   cartItems: Cookies.get('cartItems')
-  ? JSON.parse(Cookies.get('cartItems')) : [],
+  ? JSON.parse(cartItemsCookie) : [],
   addItem: (product: ProductType) => {
     set((state) => {
       const newItem = { ...product, quantity: 1}
