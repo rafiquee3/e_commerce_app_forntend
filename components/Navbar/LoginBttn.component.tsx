@@ -5,9 +5,9 @@ import { FC, useEffect } from 'react'
 import { useUserStore } from '../Store/store';
 
 const Container = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 export const LoginBttn: FC = (): JSX.Element => {
   const user = useUserStore((state) => state.user);

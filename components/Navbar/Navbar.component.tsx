@@ -57,8 +57,8 @@ export const Navbar: FC = (): JSX.Element => {
       </div>
       <Menu/>
       <div className='actionPanel'>
-        <div className='itemCounter'>{cartItems.length && cartItems.reduce((acc, curr) => acc + curr.quantity, 0)}</div>
-        <Link className='cart' href={'/'}>
+        <div className='itemCounter'>{cartItems.length ? cartItems.reduce((acc, curr) => acc + curr.quantity, 0) : ''}</div>
+        <Link className='cart' href={'/cart'}>
           <Image
             src="/cart.png"
             alt="Cart icon"

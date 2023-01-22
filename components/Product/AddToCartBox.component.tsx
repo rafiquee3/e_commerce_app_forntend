@@ -12,6 +12,7 @@ export const AddToCartBox = ({ product }: {product: ProductType}): JSX.Element =
         const existItem = cartItems.find((item) => item.slug === product.slug);
         const item = existItem ? existItem : {...product, quantity: 1}; 
         if ( item.countInStock <= 0 ) {
+            alert('Out of stock');
             return
         } else {
             addItem(product);
