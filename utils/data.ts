@@ -25,7 +25,7 @@ export const data = {
         brand: 'Ikea',
         rating: 4.5,
         numReviews: 8,
-        countInStock: 20,
+        countInStock: 4,
         description: 'Piękny stół drewniany',
         isFeatured: true,
         //banner: '/images/banner1.jpg',

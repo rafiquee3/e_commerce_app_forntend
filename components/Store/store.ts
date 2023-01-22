@@ -31,9 +31,14 @@ export const useCartStore = create<CartState>((set) => ({
       const newItem = { ...item, quantity: 1}
       const existItem = state.cartItems.find((item) => item.slug === newItem.slug);
       const cartItems =  existItem ? state.cartItems.map((item) => 
-        item.name === existItem.name ? {...newItem, quantity: item.quantity + 1} : item
+        item.name === existItem.name ? {...newItem, quantity: item.quantity + 1, countInStock: item.countInStock - 1} : item
       )
-      : [...state.cartItems, newItem];
+      : [...state.cartItems, {...newItem, countInStock: item.countInStock - 1}];
+      if (item.countInStock <= 0) {
+        return {
+          carteItems: state.cartItems
+        }
+      }
       return {
         cartItems,
       }
@@ -44,7 +49,7 @@ export const useCartStore = create<CartState>((set) => ({
       const newItem = { ...item, quantity: 1}
       const existItem = state.cartItems.find((item) => item.slug === newItem.slug);
       const cartItems =  existItem ? state.cartItems.map((item) => 
-        item.name === existItem.name ? {...newItem, quantity: item.quantity - 1} : item
+        item.name === existItem.name ? {...newItem, quantity: item.quantity - 1, countInStock: item.countInStock + 1} : item
       )
       : state.cartItems;
       return {

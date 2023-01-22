@@ -7,12 +7,21 @@ const Container = styled.div`
     border: 1px solid black;
 `
 export const AddToCartBox = ({ product }: {product: ProductType}): JSX.Element => {
-    const { addItem } = useCartStore();
+    const { cartItems, addItem } = useCartStore();
+    const handleClick = () => {
+        const existItem = cartItems.find((item) => item.slug === product.slug);
+        const item = existItem ? existItem : {...product, quantity: 1}; 
+        if ( item.countInStock <= 0 ) {
+            return
+        } else {
+            addItem(product);
+        }
+    }
     return (
         <Container>
             <div>Cena: {product.price}</div>
             <div>Dostępność: {product.countInStock ? 'dostępny' : 'brak w magazynie'}</div>
-            <button onClick={() => addItem(product)} type="button">Dodaj</button>
+            <button onClick={handleClick} type="button">Dodaj</button>
         </Container>
     )
 }
