@@ -34,44 +34,50 @@ const Table = styled.table`
 `
 const Cart: NextPageWithLayout = (): JSX.Element => {
   const router = useRouter();
-  const { cartItems } = useCartStore();
+  const { cartItems, remRecordItem } = useCartStore();
   const total = cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
   const quantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0) 
   return (
     <Container>
-        <Table>
-            <thead>
-                <tr>
-                    <th className="item">Produkt</th>
-                    <th>Ilość</th>
-                    <th>Cena</th>
-                    <th>Usuń</th>
-                </tr>
-            </thead>
-            <tbody>
-                {cartItems.map((item) => (
-                    <tr key={item.name}>
-                        <td className="item"><Image src={`${item.image}`} alt={"miniatura produktu"} width={20} height={20}></Image>{item.name}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.price}</td>
-                        <td><button type='button'>Usuń</button></td>
+        {quantity ? 
+        <>
+            <Table>
+                <thead>
+                    <tr>
+                        <th className="item">Produkt</th>
+                        <th>Ilość</th>
+                        <th>Cena</th>
+                        <th>Usuń</th>
                     </tr>
-                
-                ))}
-                <tr style={{border: 'none'}}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        Suma: {total} PLN
-                    </td>
-                </tr>
-            </tbody>
-        </Table>
-        <div className="subtotal">
-            <p>Zamówienie({quantity}): {total} PLN</p>
-            <button type="button">Zapłać</button>
-        </div>
+                </thead>
+                <tbody>
+                    {cartItems.map((item) => (
+                        <tr key={item.name}>
+                            <td className="item"><Image src={`${item.image}`} alt={"miniatura produktu"} width={20} height={20}></Image>{item.name}</td>
+                            <td>{item.quantity}</td>
+                            <td>{item.price}</td>
+                            <td><button type='button' onClick={() => remRecordItem(item)}>Usuń</button></td>
+                        </tr>
+                    
+                    ))}
+                    <tr style={{border: 'none'}}>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            Suma: {total} PLN
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
+            <div className="subtotal">
+                <p>Zamówienie({quantity}): {total} PLN</p>
+                <button type="button">Zapłać</button>
+            </div>
+        </>
+        :
+        <div>Twój koszyk jest pusty</div>
+        }
     </Container>
   )
 }
