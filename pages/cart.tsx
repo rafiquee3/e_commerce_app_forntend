@@ -4,9 +4,11 @@ import { ReactElement, useEffect } from 'react'
 import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 import { useRouter } from 'next/router'
-import { useCartStore, useNavStore, useUserStore } from '@/components/Store/store'
+import { CartProductType, useCartStore, useNavStore, useUserStore } from '@/components/Store/store'
 import { CartLayout } from "@/components/Layout/CartLayout.component";
 import Image from "next/image";
+import Product from "./product/[slug]";
+import { ProductType } from "@/components/Product/ProductItem.component";
 
 const Container = styled.div`
     display: flex;
@@ -34,9 +36,16 @@ const Table = styled.table`
 `
 const Cart: NextPageWithLayout = (): JSX.Element => {
   const router = useRouter();
-  const { cartItems, remRecordItem } = useCartStore();
+  const { addItem, cartItems, remItem, remRecordItem } = useCartStore();
   const total = cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-  const quantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0) 
+  const quantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
+  const decreaseQuantity = (product: CartProductType) => {
+    if (product.quantity === 1) {
+        remRecordItem(product);
+    } else {
+        remItem(product);
+    }
+  }
   return (
     <Container>
         {quantity ? 
@@ -54,7 +63,11 @@ const Cart: NextPageWithLayout = (): JSX.Element => {
                     {cartItems.map((item) => (
                         <tr key={item.name}>
                             <td className="item"><Image src={`${item.image}`} alt={"miniatura produktu"} width={20} height={20}></Image>{item.name}</td>
-                            <td>{item.quantity}</td>
+                            <td>
+                                <button type="button" onClick={() => decreaseQuantity(item)}> - </button>
+                                {item.quantity}
+                                <button type="button" onClick={() => addItem(item)}> + </button>    
+                            </td>
                             <td>{item.price}</td>
                             <td><button type='button' onClick={() => remRecordItem(item)}>Usuń</button></td>
                         </tr>

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { ProductType } from '../Product/ProductItem.component';
 
-type ArrProductType = ProductType & {quantity: number};
+export type CartProductType = ProductType & {quantity: number};
 interface PageState {
     page: string;
     setPage: (page: string) => void;
@@ -11,7 +11,7 @@ interface UserState {
     setUser: (user: string) => void;
 }
 interface CartState {
-  cartItems: ArrProductType[] 
+  cartItems: CartProductType[] 
   addItem: (product: ProductType) => void;
   remItem:  (product: ProductType) => void;
   remRecordItem:  (product: ProductType) => void;
@@ -54,6 +54,11 @@ export const useCartStore = create<CartState>((set) => ({
         item.name === existItem.name ? {...newItem, quantity: item.quantity - 1, countInStock: item.countInStock + 1} : item
       )
       : state.cartItems;
+      if (product.countInStock < 0) {
+        return {
+          carteItems: state.cartItems
+        }
+      }
       return {
         cartItems,
       }

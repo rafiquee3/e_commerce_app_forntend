@@ -12,6 +12,7 @@ import { NextPageWithLayout } from '../_app'
 
 const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
   const { cartItems } = useCartStore();
+  console.log(cartItems)
   return (
     <>
       <Link href={'/'}>Powrót</Link>
