@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { MainLayout } from '../components/Layout'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 import { useRouter } from 'next/router'
@@ -9,6 +9,7 @@ import { CartLayout } from "@/components/Layout/CartLayout.component";
 import Image from "next/image";
 import Product from "./product/[slug]";
 import { ProductType } from "@/components/Product/ProductItem.component";
+import dynamic from "next/dynamic";
 
 const Container = styled.div`
     display: flex;
@@ -36,9 +37,9 @@ const Table = styled.table`
 `
 const Cart: NextPageWithLayout = (): JSX.Element => {
   const router = useRouter();
+  const [total, setTotal] = useState(0);
+  const [quantity, setQuantity] = useState(0);
   const { addItem, cartItems, remItem, remRecordItem } = useCartStore();
-  const total = cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-  const quantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
   const decreaseQuantity = (product: CartProductType) => {
     if (product.quantity === 1) {
         remRecordItem(product);
@@ -46,6 +47,11 @@ const Cart: NextPageWithLayout = (): JSX.Element => {
         remItem(product);
     }
   }
+  useEffect(() => {
+    setQuantity(cartItems.reduce((acc, curr) => acc + curr.quantity, 0));
+    setTotal(cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0));
+  }, [cartItems])
+
   return (
     <Container>
         {quantity ? 
@@ -104,5 +110,4 @@ Cart.getLayout = function getLayout(page: ReactElement) {
     </Layout>
   )
 }
-
 export default Cart;

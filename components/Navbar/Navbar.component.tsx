@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styled from "styled-components";
 import { LoginBttn } from '.';
 import { Menu } from ".";
@@ -48,6 +48,10 @@ const Nav = styled.nav`
 `
 export const Navbar: FC = (): JSX.Element => {
   const { cartItems } = useCartStore();
+  const [cartItemsQt, setCartItemsQt] = useState(0);
+  useEffect(() => {
+    setCartItemsQt(cartItems.reduce((acc, curr) => acc + curr.quantity, 0))
+  }, [cartItems]);
   return (
     <Nav>
       <div className='logo'>
@@ -57,7 +61,7 @@ export const Navbar: FC = (): JSX.Element => {
       </div>
       <Menu/>
       <div className='actionPanel'>
-        <div className='itemCounter'>{cartItems.length ? cartItems.reduce((acc, curr) => acc + curr.quantity, 0) : ''}</div>
+        <div className='itemCounter'>{cartItemsQt}</div>
         <Link className='cart' href={'/cart'}>
           <Image
             src="/cart.png"

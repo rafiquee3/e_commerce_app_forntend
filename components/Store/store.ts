@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { ProductType } from '../Product/ProductItem.component';
+import Cookies from 'js-cookie';
 
 export type CartProductType = ProductType & {quantity: number};
 interface PageState {
@@ -27,7 +28,8 @@ export const useUserStore = create<UserState>((set) => ({
     // pageMain: () => set((state) => ({ page: 'main' })),
 }))
 export const useCartStore = create<CartState>((set) => ({
-  cartItems: [],
+  cartItems: Cookies.get('cartItems')
+  ? JSON.parse(Cookies.get('cartItems')) : [],
   addItem: (product: ProductType) => {
     set((state) => {
       const newItem = { ...product, quantity: 1}
@@ -36,6 +38,7 @@ export const useCartStore = create<CartState>((set) => ({
         item.name === existItem.name ? {...newItem, quantity: item.quantity + 1, countInStock: item.countInStock - 1} : item
       )
       : [...state.cartItems, {...newItem, countInStock: product.countInStock - 1}];
+      Cookies.set('cartItems', JSON.stringify(cartItems));
       if (product.countInStock <= 0) {
         return {
           carteItems: state.cartItems
