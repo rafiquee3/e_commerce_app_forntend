@@ -20,7 +20,7 @@ export const LoginBttn: FC = (): JSX.Element => {
 
   return (
     <Container>
-      <Link style={{height: '30px'}} href={user ? '/logout' : '/signin'}>
+      <Link style={{height: '30px'}} href={'/login'}>
         <Image
           src="/user.png"
           alt="User icon"

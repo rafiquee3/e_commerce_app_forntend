@@ -17,6 +17,7 @@ const Container = styled.div`
       grid-template-columns: repeat(auto-fit, minmax(220px, 220px));
       grid-gap: 40px;
       justify-content: center;
+      align-items: flex-start;
       padding: initial;
     }
 `
