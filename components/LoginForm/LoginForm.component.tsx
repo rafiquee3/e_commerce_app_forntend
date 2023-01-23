@@ -7,40 +7,44 @@ import Link from 'next/link';
 import { FontColor } from '../../styles/colors';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
 
+
 interface Values {
   email: string;
   password: string;
 }
-
+const validateEmail = (value: string) => {
+  let error: string = '';
+  if (!value) {
+    error = 'Required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+    error = 'Invalid email address';
+  }
+  return error;
+}
+const validateLogin = (value: string) => {
+  let error: string = '';
+  if (!value) {
+    error = 'Required';
+  }
+  return error;
+}
+const Container = styled.div`
+ form {
+  display: flex;
+  flex-direction: column;
+ }
+`
 export const LoginForm: FC = (): JSX.Element => {
 
 
 
   return (
-    <>
-       <h1>Signup</h1>
+    <Container>
+       <h1>Logowanie</h1>
       <Formik
         initialValues={{
           email: '',
           password: '',
-        }}
-        validate={values => {
-          type Error = {
-            email: string;
-            password: string;
-          }
-          const errors: Error = {email: '', password: ''};
-          if (!values.email) {
-            errors.email = 'Required';
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = 'Invalid email address';
-          } 
-          if (!values.password) {
-            errors.password = 'Required';
-          }
-          return errors;
         }}
         onSubmit={(
           values: Values,
@@ -52,12 +56,13 @@ export const LoginForm: FC = (): JSX.Element => {
           }, 500);
         }}
       >
-       {({ isSubmitting }) => (
+       {({ isSubmitting, errors, touched, validateField, validateForm }) => (
          <Form>
            <label htmlFor="email">Login</label>
-           <Field id="email" type="email" name="email" />
+           <Field id="email" type="email" name="email" validate={validateEmail} />
            <ErrorMessage name="email" component="div" />
-           <Field type="password" name="password" />
+           <label htmlFor="password">Password</label>
+           <Field id="password" type="password" name="password" validate={validateLogin}/>
            <ErrorMessage name="password" component="div" />
            <button type="submit" disabled={isSubmitting}>
              Submit
@@ -65,6 +70,6 @@ export const LoginForm: FC = (): JSX.Element => {
          </Form>
        )}
       </Formik>
-    </>
+    </Container>
   )
 }
