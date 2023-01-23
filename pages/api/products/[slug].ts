@@ -8,17 +8,15 @@ export default async function handler(
 ) {
     try {
         const product = await prisma.product.findUnique({
-          where: {
+            where: {
             slug: req.query.slug,
-          },
+            },
         });
         if (!product) {
-          throw new Error('The article with the given id does not exist');
+            throw new Error('The article with the given id does not exist');
         }
         res.status(200).json(product);
-      } catch (error) {
+        } catch (error) {
         return error;
-      }
-
-  
+        }  
 }
