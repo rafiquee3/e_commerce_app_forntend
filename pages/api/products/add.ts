@@ -33,7 +33,7 @@ export default async function handler(
             throw new Error('Error...');
         }
         res.status(200).json(product);
-        } catch (error) {   
-         res.json({"error": error})
+        } catch (err: any) {   
+         res.json({"error": err.message})
         }
 }

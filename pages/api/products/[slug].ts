@@ -8,17 +8,19 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse//<ProductType>
 ) {
-    console.log(req.query.slug);
-    
+    try {
+        const slug: any = req.query.slug;
         const product = await prisma.product.findUnique({
             where: {
-            slug: req.query.slug,
+            slug,
             },
         });
-        console.log('product: ', product)
-        // if (!product) {
-        //     throw new Error('The article with the given id does not exist');
-        // }
+
+        if (!product) {
+            throw new Error('The article with the given id does not exist');
+        }
         res.status(200).json(product);
-       
+    } catch (err: any) {
+        res.json({"error": err.message})
+    }
 }
