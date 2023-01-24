@@ -20,6 +20,7 @@ export default NextAuth({
             });
           
             if (user && bcryptjs.compareSync(credentials.hash, user.hash)) {
+            console.log(user)
             return {
               id: user.id,
               login: user.login,
@@ -96,11 +97,13 @@ export default NextAuth({
     
     async jwt({ token, user, account, profile, isNewUser }) { 
         if (user?.id) token.id = user.id;
+        if (user?.login) token.login = user.login;
         if (user?.isAdmin) token.isAdmin = user.isAdmin;
         return token 
     },
     async session({ session, token, user }) { 
-        if (token?._id) session.user.id = token.id;
+        if (token?.id) session.user.id = token.id;
+        if (token?.login) session.user.login = token.login;
         if (token?.isAdmin) session.user.isAdmin = token.isAdmin;
         return session 
     },

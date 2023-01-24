@@ -26,7 +26,7 @@ export const LoginBttn: FC = (): JSX.Element => {
       {status === 'loading' ? (
                 'Loading'
               ) : session?.user ? (
-                session.user.email
+                session.user.login
               ) : (
                 <Image
                   src="/user.png"
