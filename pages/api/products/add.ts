@@ -8,6 +8,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+    if (req.method !== 'POST') {
+        return;
+    }
     try {
         const data: ProductType = req.body;
         console.log(data)

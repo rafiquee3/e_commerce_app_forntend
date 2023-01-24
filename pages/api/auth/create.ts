@@ -16,6 +16,19 @@ type ErrorObj = {
   };
 const prisma = new PrismaClient();
 
+class CustomError extends Error {
+    msg: ErrorObj[];
+    constructor(msg: ErrorObj[], ...params: []) {
+      super(...params);
+
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, CustomError);
+      }
+      this.name = "CustomError";
+      this.msg = msg;
+    }
+}
+  
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -24,9 +37,7 @@ export default async function handler(
         if (req.method !== 'POST') {
             return;
         }
-    
         const errors: ErrorObj[] = [];
-    
         const existingUser = await prisma.user.findUnique({
             where: {
               login: dto.login,
@@ -37,7 +48,6 @@ export default async function handler(
             email: dto.email,
         },
         });
-    
         if (existingUser) {
           errors.push({
             field: 'login',
@@ -96,13 +106,15 @@ export default async function handler(
     }
     try {
         const data: UserType = req.body;
-        console.log(data)
+        if (!data) {
+            throw new CustomError([{
+                field: 'data',
+                error: 'empty data',
+            }]);
+        }
         const validationError: ErrorObj[] | undefined = await userValidator(data);
         if (validationError?.length) {
-            throw new Error('Validation error');
-        }
-        if (!data) {
-            throw new Error('Error...');
+            throw new CustomError(validationError);
         }
         let hash = bcryptjs.hashSync(data.hash, 8);
         const user = await prisma.user.create({
@@ -120,6 +132,6 @@ export default async function handler(
         }
         res.status(200).json({"status": "success"});
         } catch (err: any) {   
-         res.json({"error": err.message})
+         res.json({"error": err.msg})
         }
 }

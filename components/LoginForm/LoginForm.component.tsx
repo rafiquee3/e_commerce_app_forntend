@@ -1,24 +1,19 @@
 import styled from "styled-components";
-//import 'react-app-polyfill/ie11';
-import Image from 'next/image'
 import { FC, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { FontColor } from '../../styles/colors';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
-
+import { ToastContainer, toast } from 'react-toastify';
+import { signIn, useSession } from 'next-auth/react';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Values {
-  email: string;
-  password: string;
+  login: string;
+  hash: string;
 }
-const validateEmail = (value: string) => {
+const validateHash = (value: string) => {
   let error: string = '';
   if (!value) {
     error = 'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    error = 'Invalid email address';
-  }
+  } 
   return error;
 }
 const validateLogin = (value: string) => {
@@ -35,41 +30,51 @@ const Container = styled.div`
  }
 `
 export const LoginForm: FC = (): JSX.Element => {
-
-
-
   return (
     <Container>
        <h1>Logowanie</h1>
       <Formik
         initialValues={{
-          email: '',
-          password: '',
+          login: '',
+          hash: '',
         }}
-        onSubmit={(
+        onSubmit={async (
           values: Values,
           { setSubmitting }: FormikHelpers<Values>
         ) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 500);
+          try {
+            const result = await signIn('credentials', {
+              redirect: false,
+              login: values.login,
+              hash: values.hash,
+            });
+            if (result?.error) {
+              toast.error(result.error);
+            }
+          } catch (err: any) {
+            const msg = err.response && err.response.data && err.response.data.message
+            ? err.response.data.message
+            : err.message; 
+            toast.error(msg);
+          }
+          //setSubmitting(false);
         }}
       >
        {({ isSubmitting, errors, touched, validateField, validateForm }) => (
          <Form>
-           <label htmlFor="email">Login</label>
-           <Field id="email" type="email" name="email" validate={validateEmail} />
-           <ErrorMessage name="email" component="div" />
-           <label htmlFor="password">Password</label>
-           <Field id="password" type="password" name="password" validate={validateLogin}/>
-           <ErrorMessage name="password" component="div" />
+           <label htmlFor="login">Login</label>
+           <Field id="login" type="text" name="login" validate={validateLogin} />
+           <ErrorMessage name="login" component="div" />
+           <label htmlFor="hash">Password</label>
+           <Field id="hash" type="password" name="hash" validate={validateHash}/>
+           <ErrorMessage name="hash" component="div" />
            <button type="submit" disabled={isSubmitting}>
              Submit
            </button>
          </Form>
        )}
       </Formik>
+      <ToastContainer />
     </Container>
   )
 }

@@ -1,38 +1,29 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaClient } from '@prisma/client'
 import bcryptjs from 'bcryptjs';
 
+const prisma = new PrismaClient();
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
-    // EmailProvider({
-    //   server: process.env.EMAIL_SERVER,
-    //   from: process.env.EMAIL_FROM,
-    // }),
-    // AppleProvider({
-    //   clientId: process.env.APPLE_ID,
-    //   clientSecret: {
-    //     appleId: process.env.APPLE_ID,
-    //     teamId: process.env.APPLE_TEAM_ID,
-    //     privateKey: process.env.APPLE_PRIVATE_KEY,
-    //     keyId: process.env.APPLE_KEY_ID,
-    //   },
-    // }),
+
     CredentialsProvider({
         async authorize(credentials) {
-          await db.connect();
-          const user = await User.findOne({
-            email: credentials.email,
-          });
-          await db.disconnect();
-          if (user && bcryptjs.compareSync(credentials.password, user.password)) {
+            console.log(credentials)
+        const user = await prisma.user.findUnique({
+            where: {
+                login: credentials?.login,
+            },
+            });
+          
+            if (user && bcryptjs.compareSync(credentials.hash, user.hash)) {
             return {
-              _id: user._id,
+              id: user.id,
               name: user.name,
               email: user.email,
-              image: 'f',
               isAdmin: user.isAdmin,
             };
           }
@@ -103,12 +94,12 @@ export default NextAuth({
     // async redirect({ url, baseUrl }) { return baseUrl },
     
     async jwt({ token, user, account, profile, isNewUser }) { 
-        if (user?._id) token._id = user._id;
+        if (user?.id) token.id = user.id;
         if (user?.isAdmin) token.isAdmin = user.isAdmin;
         return token 
     },
     async session({ session, token, user }) { 
-        if (token?._id) session.user._id = token._id;
+        if (token?._id) session.user.id = token.id;
         if (token?.isAdmin) session.user.isAdmin = token.isAdmin;
         return session 
     },
