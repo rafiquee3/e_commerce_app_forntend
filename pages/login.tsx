@@ -5,7 +5,9 @@ import { FormLayout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 
 const Login: NextPageWithLayout = () => {
-  return <LoginForm/>
+  return (
+    <LoginForm/>
+  )
 }
 
 Login.getLayout = function getLayout(page: ReactElement) {

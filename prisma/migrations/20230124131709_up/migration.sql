@@ -1,8 +1,14 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "login" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "name" TEXT
+    "hash" TEXT NOT NULL,
+    "name" TEXT,
+    "surname" TEXT,
+    "refreshToken" TEXT
 );
 
 -- CreateTable
@@ -29,6 +35,9 @@ CREATE TABLE "Product" (
     "description" TEXT NOT NULL,
     "isFeatured" BOOLEAN NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_login_key" ON "User"("login");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
