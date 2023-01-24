@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
 import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
+import { Url } from "url";
 
 interface Values {
   login: string;
@@ -30,6 +32,16 @@ const Container = styled.div`
  }
 `
 export const LoginForm: FC = (): JSX.Element => {
+  const { data: session } = useSession();
+
+  const router = useRouter();
+  const { redirect } = router.query;
+  const url: any = redirect;
+  useEffect(() => {
+    if (session?.user) {
+      router.push(url || '/');
+    }
+  }, [router, session, redirect, url]);
   return (
     <Container>
        <h1>Logowanie</h1>

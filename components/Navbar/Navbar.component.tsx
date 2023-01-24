@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { LoginBttn } from '.';
 import { Menu } from ".";
 import { useCartStore } from '../Store/store';
+import { SessionProvider, useSession } from 'next-auth/react';
 
 const Nav = styled.nav`
   position: fixed;
@@ -46,32 +47,34 @@ const Nav = styled.nav`
     }
   }
 `
-export const Navbar: FC = (): JSX.Element => {
+export const Navbar: FC = (props: any): JSX.Element => {
   const { cartItems } = useCartStore();
   const [cartItemsQt, setCartItemsQt] = useState(0);
   useEffect(() => {
     setCartItemsQt(cartItems.reduce((acc, curr) => acc + curr.quantity, 0))
   }, [cartItems]);
   return (
-    <Nav>
-      <div className='logo'>
-        <div>
-          SKLEP
+    <SessionProvider session={props.session}>
+      <Nav>
+        <div className='logo'>
+          <div>
+            SKLEP
+          </div>
         </div>
-      </div>
-      <Menu/>
-      <div className='actionPanel'>
-        <div className='itemCounter'>{cartItemsQt}</div>
-        <Link className='cart' href={'/cart'}>
-          <Image
-            src="/cart.png"
-            alt="Cart icon"
-            width={30}
-            height={30}
-          />
-        </Link>
-        <LoginBttn/>
-      </div>
-    </Nav>
+        <Menu/>
+        <div className='actionPanel'>
+          <div className='itemCounter'>{cartItemsQt}</div>
+          <Link className='cart' href={'/cart'}>
+            <Image
+              src="/cart.png"
+              alt="Cart icon"
+              width={30}
+              height={30}
+            />
+          </Link>
+          <LoginBttn/>
+        </div>
+      </Nav>
+    </SessionProvider>
   )
 }
