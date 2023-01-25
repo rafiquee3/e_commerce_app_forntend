@@ -22,8 +22,6 @@ export const LoginBttn: FC = (): JSX.Element => {
   const [showMenu, setShowMenu] = useState(false);
   const { status, data: session } = useSession();
   const [showStatus, setShowStatus] = useState();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
   const handleOnClick = () => {
     setShowMenu(prev => !prev);
   }
@@ -42,10 +40,6 @@ export const LoginBttn: FC = (): JSX.Element => {
     </Link>
   ), [session?.user, status]);
 
-  useEffect(() => {
-      const userLS = (localStorage.getItem('user') || "");
-      setUser(userLS);  
-  },[setUser])
   useEffect(() => {
    setShowStatus(data);
 },[data])

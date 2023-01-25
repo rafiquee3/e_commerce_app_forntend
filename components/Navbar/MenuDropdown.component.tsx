@@ -2,6 +2,8 @@ import { FC } from 'react'
 import styled from "styled-components";
 import Link from 'next/link'
 import { signOut } from 'next-auth/react';
+import Cookies from 'js-cookie';
+import { useCartStore } from '../Store/store';
 
 const MenuList = styled.ul`
   display: flex;
@@ -27,10 +29,13 @@ const MenuList = styled.ul`
     display: block;
   }
 `
-const handleOnClick = () => {
-  signOut({ callbackUrl: '/login'});
-}
 export const MenuDropdown: FC = (): JSX.Element => {
+  const { resetItem } = useCartStore();
+  const handleOnClick = () => {
+    Cookies.remove('cartItems');
+    resetItem();
+    signOut({ callbackUrl: '/login'});
+  }
   return (
     <MenuList>
       <li><Link href={'/profile'}>Profil</Link></li>

@@ -8,7 +8,6 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const Main = styled.main`
     display: flex;
-    position: relative;
     flex-direction: column;
     align-items: center;
     width: 100vw;
@@ -16,7 +15,7 @@ const Main = styled.main`
     overflow: hidden;
     line-height: 1.5em;
 `
-export const Layout = ({title, children, session}: {title: ReactNode, children: ReactNode, session: any}): JSX.Element => {
+export const Layout = ({title, children, session}: {title: ReactNode, children: ReactNode, session?: any}): JSX.Element => {
   
   return ( 
     <SessionProvider session={session}>
@@ -27,7 +26,18 @@ export const Layout = ({title, children, session}: {title: ReactNode, children: 
       </Head>
       <Navbar/>
       <Main>
-        <ToastContainer />
+        <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{marginTop: "40px"}}/>
         {children}
       </Main>
       <Footer />

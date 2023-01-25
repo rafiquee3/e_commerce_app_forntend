@@ -12,10 +12,13 @@ interface UserState {
     setUser: (user: string) => void;
 }
 interface CartState {
-  cartItems: CartProductType[] 
+  cartItems: CartProductType[];
+  shippingAddress: any;
+  paymentMethod: string;
   addItem: (product: ProductType) => void;
   remItem:  (product: ProductType) => void;
   remRecordItem:  (product: ProductType) => void;
+  resetItem: () => void;
 }
 export const useNavStore = create<PageState>((set) => ({
   page: '',
@@ -27,11 +30,15 @@ export const useUserStore = create<UserState>((set) => ({
     setUser: (user: string) => set(() => ({ user })),
     // pageMain: () => set((state) => ({ page: 'main' })),
 }))
+
 type ItemsCookie = CartProductType[] | undefined;
 const cartItemsCookie: ItemsCookie | any = Cookies.get('cartItems');
+
 export const useCartStore = create<CartState>((set) => ({
   cartItems: Cookies.get('cartItems')
   ? JSON.parse(cartItemsCookie) : [],
+  shippingAddress: {location: {}},
+  paymentMethod: 'paypal',
   addItem: (product: ProductType) => {
     set((state) => {
       const newItem = { ...product, quantity: 1}
@@ -78,5 +85,12 @@ export const useCartStore = create<CartState>((set) => ({
         cartItems,
       }
     }); 
+  },
+  resetItem: () => {
+    set(() => { return {
+      cartItems: [],
+      shippingAddress: { location: {}},
+      paymentMethod: '',
+    } }); 
   },
 }));

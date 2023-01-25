@@ -29,6 +29,7 @@ const Container = styled.div`
  form {
   display: flex;
   flex-direction: column;
+  position: relative;
  }
 `
 export const LoginForm: FC = (): JSX.Element => {
@@ -61,9 +62,9 @@ export const LoginForm: FC = (): JSX.Element => {
               hash: values.hash,
             });
             if (result?.error) {
-              toast.error(result.error);
+              toast.error(result.error, {style: {background: "red", color: "white"}});
             } else {
-              toast({style: {marginTop: "40px"}}, 'Logged in')
+              toast('Logged in', {style: {background: "green", color: "white"}});
             }
           } catch (err: any) {
             const msg = err.response && err.response.data && err.response.data.message
@@ -71,7 +72,6 @@ export const LoginForm: FC = (): JSX.Element => {
             : err.message; 
             toast.error(msg);
           }
-          //setSubmitting(false);
         }}
       >
        {({ isSubmitting, errors, touched, validateField, validateForm }) => (

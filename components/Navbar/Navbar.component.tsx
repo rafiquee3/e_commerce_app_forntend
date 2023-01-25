@@ -51,11 +51,12 @@ const Nav = styled.nav`
   }
 `
 export const Navbar: FC = (props: any): JSX.Element => {
-  const { cartItems } = useCartStore();
+  const { cartItems, paymentMethod } = useCartStore();
   const [cartItemsQt, setCartItemsQt] = useState(0);
   useEffect(() => {
     setCartItemsQt(cartItems.reduce((acc, curr) => acc + curr.quantity, 0))
   }, [cartItems]);
+  console.log(paymentMethod)
   return (
     <Nav>
       <div className='logo'>
