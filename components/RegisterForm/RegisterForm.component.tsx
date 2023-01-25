@@ -5,7 +5,9 @@ import { toast } from 'react-toastify';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 import Link from "next/link";
+import { UserType } from "@/pages/api/auth/create";
 
 interface Values {
   login: string;
@@ -16,15 +18,40 @@ interface Values {
 }
 const validateHash = (value: string) => {
   let error: string = '';
+  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
+    error = 'password should consist of letters and numbers and may contain _';
+  }
   if (!value) {
     error = 'Required';
   } 
+  if (value.length < 5) {
+    error = 'the entered password should contain at least 5 characters';
+  }
+  if (value.length > 13) {
+    error = 'the entered password should contain at max 13 characters';
+  }
   return error;
 }
 const validateLogin = (value: string) => {
   let error: string = '';
+  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
+    error = 'login should consist of letters and numbers and may contain _';
+  }
   if (!value) {
     error = 'Required';
+  }
+  if (value.length < 5) {
+    error = 'the entered word should contain at least 5 characters';
+  }
+  if (value.length > 13) {
+    error = 'the entered word should contain at max 13 characters';
+  }
+  return error;
+}
+const validateEmail = (value: string) => {
+  let error: string = '';
+  if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+    error = 'Email incorrect';
   }
   return error;
 }
@@ -59,13 +86,24 @@ export const RegisterForm: FC = (): JSX.Element => {
         }}
         onSubmit={async (
           values: Values,
-          { setSubmitting }: FormikHelpers<Values>
+          { resetForm }: FormikHelpers<Values>,
         ) => {
-          try {
-            
-          } catch (err: any) {
-            
+          const data: UserType = {
+            login: values.login,
+            email: values.email,
+            hash: values.hash,
+            name: values.name,
+            surname: values.surname
           }
+          axios.post('http://localhost:3000/api/auth/create', data)
+          .then((res) => {
+            toast('Success', {style: {background: "green", color: "white"}})
+            resetForm();
+          })
+          .catch((err) => {
+            toast.error(err.response.data.error[0].error
+            , {style: {background: "red", color: "white"}});
+          });
         }}
       >
        {({ isSubmitting, errors, touched, validateField, validateForm }) => (
@@ -79,15 +117,15 @@ export const RegisterForm: FC = (): JSX.Element => {
            <ErrorMessage name="hash" component="div" />
 
            <label htmlFor="email">Email</label>
-           <Field id="email" type="email" name="email" validate={validateHash}/>
+           <Field id="email" type="email" name="email" validate={validateEmail}/>
            <ErrorMessage name="email" component="div" />
 
            <label htmlFor="name">Name</label>
-           <Field id="name" type="email" name="name" validate={validateHash}/>
+           <Field id="name" type="email" name="name" />
            <ErrorMessage name="name" component="div" />
 
            <label htmlFor="surname">Surname</label>
-           <Field id="surname" type="surname" name="surname" validate={validateHash}/>
+           <Field id="surname" type="surname" name="surname" />
            <ErrorMessage name="surname" component="div" />
 
            <button type="submit" disabled={isSubmitting}>

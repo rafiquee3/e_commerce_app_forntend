@@ -114,7 +114,8 @@ export default async function handler(
         }
         const validationError: ErrorObj[] | undefined = await userValidator(data);
         if (validationError?.length) {
-            throw new CustomError(validationError);
+          console.log('err')
+          throw new CustomError(validationError);
         }
         let hash = bcryptjs.hashSync(data.hash, 8);
         const user = await prisma.user.create({
@@ -132,6 +133,6 @@ export default async function handler(
         }
         res.status(200).json({"status": "success"});
         } catch (err: any) {   
-         res.json({"error": err.msg})
+         res.status(400).json({"error": err.msg})
         }
 }
