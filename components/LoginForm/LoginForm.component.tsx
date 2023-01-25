@@ -62,6 +62,8 @@ export const LoginForm: FC = (): JSX.Element => {
             });
             if (result?.error) {
               toast.error(result.error);
+            } else {
+            toast('Logged in');
             }
           } catch (err: any) {
             const msg = err.response && err.response.data && err.response.data.message
@@ -86,7 +88,6 @@ export const LoginForm: FC = (): JSX.Element => {
          </Form>
        )}
       </Formik>
-      <ToastContainer />
     </Container>
   )
 }

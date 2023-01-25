@@ -39,11 +39,14 @@ const Nav = styled.nav`
       left: -70px;
       line-height: 40px;
     }
-    .cart {
+    a {
+      margin: 0;
+      padding: 0;
+    }
+    a.cart {
       position: absolute;
       left: -40px;
       top: 5px;
-      line-height: 40px;
     }
   }
 `

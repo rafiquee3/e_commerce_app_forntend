@@ -4,6 +4,7 @@ import { Navbar } from '../Navbar'
 import { Footer } from "../Footer";
 import Head from "next/head";
 import { SessionProvider, useSession } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Main = styled.main`
     display: flex;
@@ -28,6 +29,7 @@ export const Layout = ({title, children, session}: {title: ReactNode, children: 
         {children}
       </Main>
       <Footer />
+      <ToastContainer />
     </SessionProvider>
   )
 }
