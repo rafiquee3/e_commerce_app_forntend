@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FC, useEffect, useState } from 'react';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
 import { toast } from 'react-toastify';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -121,11 +121,11 @@ export const RegisterForm: FC = (): JSX.Element => {
            <ErrorMessage name="email" component="div" />
 
            <label htmlFor="name">Name</label>
-           <Field id="name" type="email" name="name" />
+           <Field id="name" type="text" name="name" />
            <ErrorMessage name="name" component="div" />
 
            <label htmlFor="surname">Surname</label>
-           <Field id="surname" type="surname" name="surname" />
+           <Field id="surname" type="text" name="surname" />
            <ErrorMessage name="surname" component="div" />
 
            <button type="submit" disabled={isSubmitting}>
