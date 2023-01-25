@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { MainLayout } from '../components/Layout'
 import { ReactElement, useEffect, useState } from 'react'
 import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
@@ -7,9 +6,6 @@ import { useRouter } from 'next/router'
 import { CartProductType, useCartStore, useNavStore, useUserStore } from '@/components/Store/store'
 import { CartLayout } from "@/components/Layout/CartLayout.component";
 import Image from "next/image";
-import Product from "./product/[slug]";
-import { ProductType } from "@/components/Product/ProductItem.component";
-import dynamic from "next/dynamic";
 
 const Container = styled.div`
     display: flex;
