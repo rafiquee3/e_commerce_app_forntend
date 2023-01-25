@@ -54,27 +54,25 @@ export const Navbar: FC = (props: any): JSX.Element => {
     setCartItemsQt(cartItems.reduce((acc, curr) => acc + curr.quantity, 0))
   }, [cartItems]);
   return (
-    <SessionProvider session={props.session}>
-      <Nav>
-        <div className='logo'>
-          <div>
-            SKLEP
-          </div>
+    <Nav>
+      <div className='logo'>
+        <div>
+          SKLEP
         </div>
-        <Menu/>
-        <div className='actionPanel'>
-          <div className='itemCounter'>{cartItemsQt}</div>
-          <Link className='cart' href={'/cart'}>
-            <Image
-              src="/cart.png"
-              alt="Cart icon"
-              width={30}
-              height={30}
-            />
-          </Link>
-          <LoginBttn/>
-        </div>
-      </Nav>
-    </SessionProvider>
+      </div>
+      <Menu/>
+      <div className='actionPanel'>
+        <div className='itemCounter'>{cartItemsQt}</div>
+        <Link className='cart' href={'/cart'}>
+          <Image
+            src="/cart.png"
+            alt="Cart icon"
+            width={30}
+            height={30}
+          />
+        </Link>
+        <LoginBttn/>
+      </div>
+    </Nav>
   )
 }
