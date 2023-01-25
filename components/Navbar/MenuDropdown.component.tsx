@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import styled from "styled-components";
 import Link from 'next/link'
+import { signOut } from 'next-auth/react';
 
 const MenuList = styled.ul`
   display: flex;
@@ -26,11 +27,14 @@ const MenuList = styled.ul`
     display: block;
   }
 `
+const handleOnClick = () => {
+  signOut({ callbackUrl: '/login'});
+}
 export const MenuDropdown: FC = (): JSX.Element => {
   return (
     <MenuList>
       <li><Link href={'/profile'}>Profil</Link></li>
-      <li><Link href={'/logout'}>Logout</Link></li>
+      <li><Link href={'#'} onClick={handleOnClick}>Logout</Link></li>
     </MenuList> 
     )
 }

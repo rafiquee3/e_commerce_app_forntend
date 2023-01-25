@@ -63,7 +63,7 @@ export const LoginForm: FC = (): JSX.Element => {
             if (result?.error) {
               toast.error(result.error);
             } else {
-            toast('Logged in');
+              toast({style: {marginTop: "40px"}}, 'Logged in')
             }
           } catch (err: any) {
             const msg = err.response && err.response.data && err.response.data.message

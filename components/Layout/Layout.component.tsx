@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const Main = styled.main`
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     width: 100vw;
@@ -26,10 +27,10 @@ export const Layout = ({title, children, session}: {title: ReactNode, children: 
       </Head>
       <Navbar/>
       <Main>
+        <ToastContainer />
         {children}
       </Main>
       <Footer />
-      <ToastContainer />
     </SessionProvider>
   )
 }
