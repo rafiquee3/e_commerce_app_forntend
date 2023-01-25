@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { FC, useEffect, useState } from 'react';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
-import { Url } from "url";
+import Link from "next/link";
 
 interface Values {
   login: string;
@@ -79,12 +79,15 @@ export const LoginForm: FC = (): JSX.Element => {
            <label htmlFor="login">Login</label>
            <Field id="login" type="text" name="login" validate={validateLogin} />
            <ErrorMessage name="login" component="div" />
+
            <label htmlFor="hash">Password</label>
            <Field id="hash" type="password" name="hash" validate={validateHash}/>
            <ErrorMessage name="hash" component="div" />
+           
            <button type="submit" disabled={isSubmitting}>
              Submit
            </button>
+           <p>Nie masz załozonego konta, <Link style={{color: "blue"}} href={"/register"}>zarejestruj się</Link></p>
          </Form>
        )}
       </Formik>

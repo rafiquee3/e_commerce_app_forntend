@@ -51,7 +51,9 @@ const Cart: NextPageWithLayout = (): JSX.Element => {
     setQuantity(cartItems.reduce((acc, curr) => acc + curr.quantity, 0));
     setTotal(cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0));
   }, [cartItems])
-
+  const handlePayment = () => {
+    
+  }
   return (
     <Container>
         {quantity ? 
@@ -91,7 +93,7 @@ const Cart: NextPageWithLayout = (): JSX.Element => {
             </Table>
             <div className="subtotal">
                 <p>Zamówienie({quantity}): {total} PLN</p>
-                <button type="button">Zapłać</button>
+                <button type="button" onClick={handlePayment}>Zapłać</button>
             </div>
         </>
         :
