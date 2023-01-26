@@ -33,6 +33,8 @@ export const MenuDropdown: FC = (): JSX.Element => {
   const { resetItem } = useCartStore();
   const handleOnClick = () => {
     Cookies.remove('cartItems');
+    Cookies.remove('address');
+    Cookies.remove('user');
     resetItem();
     signOut({ callbackUrl: '/login'});
   }

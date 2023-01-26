@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import validator from 'validator';
 import axios from 'axios';
 import { useCartStore } from "../Store/store";
+import Cookies from "js-cookie";
 
 interface Values {
   name: string;
@@ -136,6 +137,7 @@ export const ShippingForm: FC = (): JSX.Element => {
             telephone: values.telephone
           }
           saveAddress(address);
+          Cookies.set('address', JSON.stringify({location: address}));
           toast('Dane zapisano', {style: {background: "green", color: "white"}});
         }}
       >

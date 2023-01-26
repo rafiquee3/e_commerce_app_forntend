@@ -6,6 +6,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 interface Values {
   login: string;
@@ -64,6 +65,7 @@ export const LoginForm: FC = (): JSX.Element => {
             if (result?.error) {
               toast.error(result.error, {style: {background: "red", color: "white"}});
             } else {
+              Cookies.set('user', values.login);
               toast('Logged in', {style: {background: "green", color: "white"}});
             }
           } catch (err: any) {

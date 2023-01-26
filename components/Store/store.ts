@@ -41,11 +41,13 @@ export const useUserStore = create<UserState>((set) => ({
 
 type ItemsCookie = CartProductType[] | undefined;
 const cartItemsCookie: ItemsCookie | any = Cookies.get('cartItems');
+const addressCookie: {location: LocationType} | any = Cookies.get('address');
 
 export const useCartStore = create<CartState>((set) => ({
   cartItems: Cookies.get('cartItems')
   ? JSON.parse(cartItemsCookie) : [],
-  shippingAddress: {location: {}},
+  shippingAddress: Cookies.get('address')
+  ? JSON.parse(addressCookie) :{location: {}},
   paymentMethod: 'paypal',
   
   addItem: (product: ProductType) => {

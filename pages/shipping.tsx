@@ -5,7 +5,7 @@ import type { ReactElement } from 'react'
 import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 
-const Register: NextPageWithLayout = () => {
+const Shipping: NextPageWithLayout = () => {
   return (
     <>
         <CheckoutWizard activeStep={1}/>
@@ -14,12 +14,13 @@ const Register: NextPageWithLayout = () => {
   )
 }
 
-Register.getLayout = function getLayout(page: ReactElement) {
+Shipping.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout title={'shiping'}>
       <ShippingLayout>{page}</ShippingLayout>
     </Layout>
   )
 }
+Shipping.auth = true;
 
-export default Register;
+export default Shipping;
