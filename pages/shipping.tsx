@@ -3,7 +3,6 @@ import { ShippingLayout } from '@/components/Layout/ShippingLayout.component'
 import { ShippingForm } from '@/components/ShippingForm'
 import type { ReactElement } from 'react'
 import { Layout } from '../components/Layout'
-import { FormLayout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 
 const Register: NextPageWithLayout = () => {

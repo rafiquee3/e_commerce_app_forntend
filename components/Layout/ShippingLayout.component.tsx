@@ -3,6 +3,8 @@ import React, { ReactNode } from 'react'
 
 const Container = styled.div`
     display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     min-height: calc(100vh - 40px - 180px);
     margin-top: 40px;

@@ -63,6 +63,13 @@ const Container = styled.div`
 
   .dubble {
     display: flex;
+    justify-content: space-between;
+    div {
+      width: 47%;
+      input {
+        width: 100%;
+      }
+    }
   }
  }
 `
@@ -170,7 +177,7 @@ export const ShippingForm: FC = (): JSX.Element => {
               <ErrorMessage name="name" component="div" />
             </div>
             <div>
-              <label htmlFor="surname">Nazwisko</label>
+              <label htmlFor="surname">Nazwisko</label><br/>
               <Field id="surname" type="text" name="surname" validate={validateSurname} />
               <ErrorMessage name="surname" component="div" />
             </div>
@@ -184,14 +191,17 @@ export const ShippingForm: FC = (): JSX.Element => {
            <Field id="address" type="text" name="address" validate={validateAddress}/>
            <ErrorMessage name="adres" component="div" />
           
-           <div>
-            <label htmlFor="city">Miasto</label>
-            <Field id="city" type="text" name="city" validate={validateCity}/>
-            <ErrorMessage name="city" component="div" />
-
-            <label htmlFor="postal">Kod pocztowy</label>
-            <Field id="postal" type="text" name="postal" validate={validatePostal}/>
-            <ErrorMessage name="postal" component="postal" />
+           <div className="dubble">
+            <div>
+              <label htmlFor="city">Miasto</label><br/>
+              <Field id="city" type="text" name="city" validate={validateCity}/>
+              <ErrorMessage name="city" component="div" />
+            </div>
+            <div>
+              <label htmlFor="postal">Kod pocztowy</label><br/>
+              <Field id="postal" type="text" name="postal" validate={validatePostal}/>
+              <ErrorMessage name="postal" component="postal" />
+            </div>
            </div>
            
            <label htmlFor="telephone">Telefon</label>
