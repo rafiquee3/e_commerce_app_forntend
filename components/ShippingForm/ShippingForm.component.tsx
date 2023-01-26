@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import validator from 'validator';
 import axios from 'axios';
+import { useCartStore } from "../Store/store";
 
 interface Values {
   name: string;
@@ -82,6 +83,9 @@ const Container = styled.div`
   flex-direction: column;
   position: relative;
 
+  p {
+    color: red;
+  }
   .dubble {
     display: flex;
     justify-content: space-between;
@@ -96,7 +100,7 @@ const Container = styled.div`
 `
 export const ShippingForm: FC = (): JSX.Element => {
   const { data: session } = useSession();
-
+  const { saveAddress } = useCartStore();
   const router = useRouter();
   const { redirect } = router.query;
   const url: any = redirect;
@@ -122,7 +126,17 @@ export const ShippingForm: FC = (): JSX.Element => {
           values: Values,
           { resetForm }: FormikHelpers<Values>,
         ) => {
-          
+          const address = {
+            name: values.name,
+            surname: values.surname,
+            email: values.email,
+            address: values.address,
+            city: values.city,
+            postal: values.postal,
+            telephone: values.telephone
+          }
+          saveAddress(address);
+          toast('Dane zapisano', {style: {background: "green", color: "white"}});
         }}
       >
        {({ isSubmitting, errors, touched, validateField, validateForm }) => (
@@ -165,7 +179,7 @@ export const ShippingForm: FC = (): JSX.Element => {
            <Field id="telephone" type="text" name="telephone" validate={validateTelephone}/>
            <ErrorMessage name="telephone" component="p" />
 
-           <button type="button" disabled={isSubmitting}>
+           <button type="submit" disabled={isSubmitting}>
              Dalej
            </button>
          </Form>

@@ -3,6 +3,15 @@ import { ProductType } from '../Product/ProductItem.component';
 import Cookies from 'js-cookie';
 
 export type CartProductType = ProductType & {quantity: number};
+export type LocationType = {
+  name: string;
+  surname: string;
+  email: string;
+  address: string;
+  city: string;
+  postal: string;
+  telephone: string;
+}
 interface PageState {
     page: string;
     setPage: (page: string) => void;
@@ -19,16 +28,15 @@ interface CartState {
   remItem:  (product: ProductType) => void;
   remRecordItem:  (product: ProductType) => void;
   resetItem: () => void;
+  saveAddress: (data: LocationType) => void;
 }
 export const useNavStore = create<PageState>((set) => ({
   page: '',
   setPage: (page: string) => set(() => ({ page })),
-  // pageMain: () => set((state) => ({ page: 'main' })),
 }))
 export const useUserStore = create<UserState>((set) => ({
     user: '',
     setUser: (user: string) => set(() => ({ user })),
-    // pageMain: () => set((state) => ({ page: 'main' })),
 }))
 
 type ItemsCookie = CartProductType[] | undefined;
@@ -39,6 +47,7 @@ export const useCartStore = create<CartState>((set) => ({
   ? JSON.parse(cartItemsCookie) : [],
   shippingAddress: {location: {}},
   paymentMethod: 'paypal',
+  
   addItem: (product: ProductType) => {
     set((state) => {
       const newItem = { ...product, quantity: 1}
@@ -92,5 +101,21 @@ export const useCartStore = create<CartState>((set) => ({
       shippingAddress: { location: {}},
       paymentMethod: '',
     } }); 
+  },
+  saveAddress: (data: LocationType) => {
+    const address = {
+      name: data.name,
+      surname: data.surname,
+      email: data.email,
+      address: data.address,
+      city: data.city,
+      postal: data.postal,
+      telephone: data.telephone,
+    }
+    set((state) => {
+      return {
+        shippingAddress: { location: address}
+      }
+    }); 
   },
 }));
