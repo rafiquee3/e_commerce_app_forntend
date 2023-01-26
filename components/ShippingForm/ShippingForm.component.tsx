@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
+import validator from 'validator';
 import axios from 'axios';
 
 interface Values {
@@ -18,44 +19,64 @@ interface Values {
 }
 const validateName = (value: string) => {
   let error: string = '';
-  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
-    error = 'login should consist of letters and numbers and may contain _';
+  if (!validator.isAlpha(value, 'pl-PL')) {
+    error = 'Imię powinno składać się wyłącznie z liter'
   }
-  if (!value) {
-    error = 'Required';
-  }
-  if (value.length < 5) {
-    error = 'the entered word should contain at least 5 characters';
-  }
-  if (value.length > 13) {
-    error = 'the entered word should contain at max 13 characters';
+  if (validator.isEmpty(value)) {
+    error = 'Imię jest wymagane'
   }
   return error;
 }
 const validateSurname = (value: string) => {
   let error: string = '';
-  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
-    error = 'login should consist of letters and numbers and may contain _';
+  if (!validator.isAlpha(value, 'pl-PL')) {
+    error = 'Nazwisko powinno składać się wyłącznie z liter'
   }
-  if (!value) {
-    error = 'Required';
-  }
-  if (value.length < 5) {
-    error = 'the entered word should contain at least 5 characters';
-  }
-  if (value.length > 13) {
-    error = 'the entered word should contain at max 13 characters';
+  if (validator.isEmpty(value)) {
+    error = 'Nazwisko jest wymagane'
   }
   return error;
 }
 const validateEmail = (value: string) => {
   let error: string = '';
-  if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    error = 'Email incorrect';
+  if (!validator.isEmail(value)) {
+    error = 'Niepoprawny adres email';
+  }
+  return error;
+}
+const validateAddress = (value: string) => {
+  let error: string = '';
+  if (validator.isEmpty(value)) {
+    error = 'Adres jest wymagany';
+  }
+  return error;
+}
+const validateCity = (value: string) => {
+  let error: string = '';
+  if (!validator.isAlpha(value, 'pl-PL')) {
+    error = 'Miasto powinno składać się wyłącznie z liter'
+  }
+  if (validator.isEmpty(value)) {
+    error = 'Miasto jest wymagane'
+  }
+  return error;
+}
+const validatePostal = (value: string) => {
+  let error: string = '';
+  if (!validator.isPostalCode(value, 'PL')) {
+    error = 'Niepoprawny kod pocztowy'
+  }
+  return error;
+}
+const validateTelephone = (value: string) => {
+  let error: string = '';
+  if (!validator.isMobilePhone(value, 'pl-PL')) {
+    error = 'Niepoprawny numer telefonu'
   }
   return error;
 }
 const Container = styled.div`
+ width: 500px;
  form {
   display: flex;
   flex-direction: column;
@@ -65,7 +86,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     div {
-      width: 47%;
+      width: 49%;
       input {
         width: 100%;
       }
@@ -73,70 +94,6 @@ const Container = styled.div`
   }
  }
 `
-const validateAddress = (value: string) => {
-  let error: string = '';
-  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
-    error = 'login should consist of letters and numbers and may contain _';
-  }
-  if (!value) {
-    error = 'Required';
-  }
-  if (value.length < 5) {
-    error = 'the entered word should contain at least 5 characters';
-  }
-  if (value.length > 13) {
-    error = 'the entered word should contain at max 13 characters';
-  }
-  return error;
-}
-const validateCity = (value: string) => {
-  let error: string = '';
-  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
-    error = 'login should consist of letters and numbers and may contain _';
-  }
-  if (!value) {
-    error = 'Required';
-  }
-  if (value.length < 5) {
-    error = 'the entered word should contain at least 5 characters';
-  }
-  if (value.length > 13) {
-    error = 'the entered word should contain at max 13 characters';
-  }
-  return error;
-}
-const validatePostal = (value: string) => {
-  let error: string = '';
-  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
-    error = 'login should consist of letters and numbers and may contain _';
-  }
-  if (!value) {
-    error = 'Required';
-  }
-  if (value.length < 5) {
-    error = 'the entered word should contain at least 5 characters';
-  }
-  if (value.length > 13) {
-    error = 'the entered word should contain at max 13 characters';
-  }
-  return error;
-}
-const validateTelephone = (value: string) => {
-  let error: string = '';
-  if (!/^[a-zA-Z0-9]+[_]?[a-zA-Z0-9]+$/.test(value)) {
-    error = 'login should consist of letters and numbers and may contain _';
-  }
-  if (!value) {
-    error = 'Required';
-  }
-  if (value.length < 5) {
-    error = 'the entered word should contain at least 5 characters';
-  }
-  if (value.length > 13) {
-    error = 'the entered word should contain at max 13 characters';
-  }
-  return error;
-}
 export const ShippingForm: FC = (): JSX.Element => {
   const { data: session } = useSession();
 
@@ -174,42 +131,42 @@ export const ShippingForm: FC = (): JSX.Element => {
             <div>
               <label htmlFor="name">Imię</label><br/>
               <Field id="name" type="text" name="name" validate={validateName} />
-              <ErrorMessage name="name" component="div" />
+              <ErrorMessage name="name" component="p" />
             </div>
             <div>
               <label htmlFor="surname">Nazwisko</label><br/>
               <Field id="surname" type="text" name="surname" validate={validateSurname} />
-              <ErrorMessage name="surname" component="div" />
+              <ErrorMessage name="surname" component="p" />
             </div>
            </div>
 
            <label htmlFor="email">Email</label>
            <Field id="email" type="email" name="email" validate={validateEmail}/>
-           <ErrorMessage name="email" component="div" />
+           <ErrorMessage name="email" component="p" />
           
            <label htmlFor="address">Adres</label>
            <Field id="address" type="text" name="address" validate={validateAddress}/>
-           <ErrorMessage name="adres" component="div" />
+           <ErrorMessage name="address" component="p" />
           
            <div className="dubble">
             <div>
               <label htmlFor="city">Miasto</label><br/>
               <Field id="city" type="text" name="city" validate={validateCity}/>
-              <ErrorMessage name="city" component="div" />
+              <ErrorMessage name="city" component="p" />
             </div>
             <div>
               <label htmlFor="postal">Kod pocztowy</label><br/>
               <Field id="postal" type="text" name="postal" validate={validatePostal}/>
-              <ErrorMessage name="postal" component="postal" />
+              <ErrorMessage name="postal" component="p" />
             </div>
            </div>
            
            <label htmlFor="telephone">Telefon</label>
            <Field id="telephone" type="text" name="telephone" validate={validateTelephone}/>
-           <ErrorMessage name="telephone" component="div" />
+           <ErrorMessage name="telephone" component="p" />
 
            <button type="button" disabled={isSubmitting}>
-             Submit
+             Dalej
            </button>
          </Form>
        )}
