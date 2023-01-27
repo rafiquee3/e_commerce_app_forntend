@@ -32,8 +32,8 @@ export const ProductItem = (product: ProductType): JSX.Element => {
                 alert('Out of stock');
                 return
             } else {
+                router.push("/cart");
                 addItem(product);
-                router.push('/')
             }
     }
     return (
