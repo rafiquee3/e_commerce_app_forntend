@@ -5,7 +5,7 @@ import type { ReactElement } from 'react'
 import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 
-const Shipping: NextPageWithLayout = () => {
+const Shipping: NextPageWithLayout = (): JSX.Element => {
   return (
     <>
         <CheckoutWizard activeStep={1}/>
@@ -21,6 +21,5 @@ Shipping.getLayout = function getLayout(page: ReactElement) {
     </Layout>
   )
 }
-Shipping.auth = true;
 
 export default Shipping;
