@@ -106,9 +106,9 @@ export const ShippingForm: FC = (): JSX.Element => {
   const { redirect } = router.query;
   const url: any = redirect;
   useEffect(() => {
-    if (session?.user) {
-      router.push(url || '/');
-    }
+    // if (session?.user) {
+    //   router.push(url || '/');
+    // }
   }, [router, session, redirect, url]);
   return (
     <Container>
