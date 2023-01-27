@@ -33,6 +33,8 @@ const Table = styled.table`
 `
 const Cart: NextPageWithLayout = (): JSX.Element => {
   const router = useRouter();
+  const { redirect } = router.query;
+  const url: any = redirect;
   const [total, setTotal] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const { addItem, cartItems, remItem, remRecordItem } = useCartStore();
@@ -48,7 +50,7 @@ const Cart: NextPageWithLayout = (): JSX.Element => {
     setTotal(cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0));
   }, [cartItems])
   const handlePayment = () => {
-    
+    router.push(url || `/shipping?redirect=${'/cart'}`);
   }
   return (
     <Container>

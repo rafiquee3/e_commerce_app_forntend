@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
 import { toast } from 'react-toastify';
-import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -34,16 +33,6 @@ const Container = styled.div`
  }
 `
 export const LoginForm: FC = (): JSX.Element => {
-  const { data: session } = useSession();
-
-  const router = useRouter();
-  const { redirect } = router.query;
-  const url: any = redirect;
-  useEffect(() => {
-    if (session?.user) {
-      router.push(url || '/');
-    }
-  }, [router, session, redirect, url]);
   return (
     <Container>
        <h1>Logowanie</h1>

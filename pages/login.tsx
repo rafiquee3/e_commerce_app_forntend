@@ -1,10 +1,23 @@
 import {LoginForm} from '../components/LoginForm'
-import type { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { Layout } from '../components/Layout'
 import { FormLayout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 const Login: NextPageWithLayout = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { redirect } = router.query;
+  const url: any = redirect;
+
+  useEffect(() => {
+    if (session?.user) {
+      console.log('hi there')
+      router.push(url || `/?redirect=${redirect}`);
+    }
+  }, [router, session, redirect, url]);
   return (
     <LoginForm/>
   )

@@ -25,6 +25,8 @@ const Container = styled.li`
 export const ProductItem = (product: ProductType): JSX.Element => {
     const { cartItems, addItem } = useCartStore();
     const router = useRouter();
+    const { redirect } = router.query;
+    const url: any = redirect;
     const handleOnClick = (product: ProductType) => {
         const existItem = cartItems.find((item) => item.slug === product.slug);
             const item = existItem ? existItem : {...product, quantity: 1}; 
@@ -32,7 +34,7 @@ export const ProductItem = (product: ProductType): JSX.Element => {
                 alert('Out of stock');
                 return
             } else {
-                router.push("/cart");
+                router.push(url || "/cart");
                 addItem(product);
             }
     }
