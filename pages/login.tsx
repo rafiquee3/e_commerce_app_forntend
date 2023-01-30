@@ -14,7 +14,6 @@ const Login: NextPageWithLayout = () => {
 
   useEffect(() => {
     if (session?.user) {
-      console.log('hi there')
       router.push(url || `/?redirect=${redirect}`);
     }
   }, [router, session, redirect, url]);

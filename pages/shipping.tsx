@@ -11,16 +11,14 @@ import { useRouter } from "next/router";
 const Shipping: NextPageWithLayout = (): JSX.Element => {
   const { data: session } = useSession();
   const router = useRouter();
-  const { redirect } = router.query;
-  const url: any = redirect;
   useEffect(() => {
     if (!session?.user) {
-      router.push(`/login?redirect=${redirect}`);
+      router.push(`/login?redirect=/shipping`);
     }
-  }, [router, session, redirect, url]);
+  }, [router, session]);
   return (
     <>
-        <CheckoutWizard />
+        <CheckoutWizard activeStep={1}/>
         <ShippingForm />
     </>
   )
