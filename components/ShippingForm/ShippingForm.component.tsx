@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import validator from 'validator';
 import { useCartStore } from "../Store/store";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 interface Values {
   name: string;
@@ -98,6 +99,7 @@ const Container = styled.div`
 `
 export const ShippingForm: FC = (): JSX.Element => {
   const { saveAddress } = useCartStore();
+  const router = useRouter();
   return (
     <Container>
        <h1>Dane adresowe</h1>
@@ -127,6 +129,7 @@ export const ShippingForm: FC = (): JSX.Element => {
           saveAddress(address);
           Cookies.set('address', JSON.stringify({location: address}));
           toast('Dane zapisano', {style: {background: "green", color: "white"}});
+          router.push('/payment');
         }}
       >
        {({ isSubmitting, errors, touched, validateField, validateForm }) => (

@@ -29,6 +29,7 @@ interface CartState {
   remRecordItem:  (product: ProductType) => void;
   resetItem: () => void;
   saveAddress: (data: LocationType) => void;
+  savePaymentMethod: (data: string) => void;
 }
 export const useNavStore = create<PageState>((set) => ({
   page: '',
@@ -47,8 +48,8 @@ export const useCartStore = create<CartState>((set) => ({
   cartItems: Cookies.get('cartItems')
   ? JSON.parse(cartItemsCookie) : [],
   shippingAddress: Cookies.get('address')
-  ? JSON.parse(addressCookie) :{location: {}},
-  paymentMethod: 'paypal',
+  ? JSON.parse(addressCookie) : {location: {}},
+  paymentMethod: '',
   
   addItem: (product: ProductType) => {
     set((state) => {
@@ -117,6 +118,13 @@ export const useCartStore = create<CartState>((set) => ({
     set((state) => {
       return {
         shippingAddress: { location: address}
+      }
+    }); 
+  },
+  savePaymentMethod: (data: string) => {
+    set((state) => {
+      return {
+        paymentMethod: data
       }
     }); 
   },

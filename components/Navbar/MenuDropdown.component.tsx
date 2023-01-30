@@ -35,6 +35,7 @@ export const MenuDropdown: FC = (): JSX.Element => {
     Cookies.remove('cartItems');
     Cookies.remove('address');
     Cookies.remove('user');
+    Cookies.remove('paymentMethod');
     resetItem();
     signOut({ callbackUrl: '/login'});
   }

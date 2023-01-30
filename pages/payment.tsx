@@ -1,25 +1,42 @@
 import styled from "styled-components";
 import { CheckoutWizard } from '@/components/Checkout/CheckoutWizard'
 import { ShippingLayout } from '@/components/Layout/ShippingLayout.component'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { Layout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useCartStore } from "@/components/Store/store";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const Payment: NextPageWithLayout = (): JSX.Element => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>();
   const { data: session } = useSession();
   const router = useRouter();
+  const {cartItems, shippingAddress, paymentMethod, savePaymentMethod} = useCartStore();
   useEffect(() => {
     if (!session?.user) {
       router.push(`/login?redirect=/payment`);
     }
-  }, [router, session]);
+    if (!shippingAddress.location) {
+      router.push('/shipping');
+      }
+  }, [router, session, shippingAddress.location]);
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    if (!selectedPaymentMethod) {
+      return toast.error('Wymagane podanie metody płatności');
+    }
+    savePaymentMethod(selectedPaymentMethod);
+    Cookies.set('paymentMethod', selectedPaymentMethod);
+
+    router.push('/placeorder');
+  }
   return (
     <>
         <CheckoutWizard activeStep={2}/>
-        <form>
+        <form onSubmit={handleSubmit}>
             <h1>Metoda płatności</h1>
             {
                 ['PayPal', 'Karta bankowa', 'Płatność przy odbiorze'].map((payment) => (
@@ -38,7 +55,7 @@ const Payment: NextPageWithLayout = (): JSX.Element => {
             }
             <div>
                 <button>Dalej</button>
-                <button onClick={() => router.push('/shipping')}>Cofnij</button>
+                <button type="button" onClick={() => router.push('/shipping')}>Cofnij</button>
             </div>
         </form>
     </>
@@ -47,7 +64,7 @@ const Payment: NextPageWithLayout = (): JSX.Element => {
 
 Payment.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout title={'shiping'}>
+    <Layout title={'payment'}>
       <ShippingLayout>{page}</ShippingLayout>
     </Layout>
   )

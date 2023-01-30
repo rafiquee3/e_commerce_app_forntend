@@ -16,6 +16,7 @@ const Shipping: NextPageWithLayout = (): JSX.Element => {
       router.push(`/login?redirect=/shipping`);
     }
   }, [router, session]);
+  console.log('shipping render')
   return (
     <>
         <CheckoutWizard activeStep={1}/>
