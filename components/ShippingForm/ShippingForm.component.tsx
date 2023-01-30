@@ -100,19 +100,21 @@ const Container = styled.div`
 export const ShippingForm: FC = (): JSX.Element => {
   const { saveAddress } = useCartStore();
   const router = useRouter();
+  const initialValues = {
+    name: '',
+    surname: '',
+    email: '',
+    address: '',
+    city: '',
+    postal: '',
+    telephone: ''
+  }
+  const cookies: any= Cookies.get('address');
   return (
     <Container>
        <h1>Dane adresowe</h1>
       <Formik
-        initialValues={{
-          name: '',
-          surname: '',
-          email: '',
-          address: '',
-          city: '',
-          postal: '',
-          telephone: ''
-        }}
+        initialValues={Cookies.get('address') ? JSON.parse(cookies).location : initialValues}
         onSubmit={async (
           values: Values,
           { resetForm }: FormikHelpers<Values>,
