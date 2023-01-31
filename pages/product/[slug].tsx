@@ -3,12 +3,12 @@ import { ProductDetailLayout } from '@/components/Layout/ProductDetailLayout.com
 import { AddToCartBox } from '@/components/Product/AddToCartBox.component'
 import { ProductType } from '@/components/Product/ProductItem.component'
 import { useCartStore } from '@/components/Store/store'
-import { data } from '@/utils/data'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ReactElement } from 'react'
 import { NextPageWithLayout } from '../_app'
+import axios from 'axios';
 
 const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
   const { cartItems } = useCartStore();
@@ -42,17 +42,21 @@ Product.getLayout = function getLayout(page: ReactElement) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  //const res = await fetch('http://localhost:3001/product/all')
-  //const products = await res.json()
-  const paths = data.products.map((product: ProductType) => ({
+  const products: ProductType[] = await axios.get(
+		`http://localhost:3000/api/products/getAllProducts`
+	);;
+
+  const paths = products.map((product: ProductType) => ({
     params: { slug: product.slug },
   }))
   return { paths, fallback: false }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }: any) => {
-  //const res = await fetch(`http://localhost:3001/product/${params.id}`)
-  const product = data.products.filter(product => product.slug === params.slug);
+  const products: ProductType[] = await axios.get(
+		`http://localhost:3000/api/products/getAllProducts`
+	);
+  const product = products.filter(product => product.slug === params.slug);
 
   return {
     props: {
