@@ -6,20 +6,15 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse//<ProductType>
+  res: NextApiResponse
 ) {
     try {
-        const slug: any = req.query.slug;
-        const product = await prisma.product.findUnique({
-            where: {
-            slug,
-            },
-        });
+        const products: ProductType[] = await prisma.product.findMany();
 
-        if (!product) {
-            throw new Error('The product with the given id does not exist');
+        if (!products) {
+            throw new Error('There are no products');
         }
-        res.status(200).json(product);
+        res.status(200).json(products);
     } catch (err: any) {
         res.json({"error": err.message})
     }
