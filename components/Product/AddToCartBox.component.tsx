@@ -1,6 +1,8 @@
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import { useCartStore } from "../Store/store";
 import { ProductType } from "./ProductItem.component";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Container = styled.div`
     background-color: gray;
@@ -12,10 +14,11 @@ export const AddToCartBox = ({ product }: {product: ProductType}): JSX.Element =
         const existItem = cartItems.find((item) => item.slug === product.slug);
         const item = existItem ? existItem : {...product, quantity: 1}; 
         if ( item.countInStock <= 0 ) {
-            alert('Out of stock');
+            toast.error('Brak produktu w magazynie');
             return
         } else {
             addItem(product);
+            toast('Dodano produkt', {style: {background: "green", color: "white"}})
         }
     }
     return (

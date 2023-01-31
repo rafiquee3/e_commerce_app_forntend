@@ -56,7 +56,6 @@ export const Navbar: FC = (props: any): JSX.Element => {
   useEffect(() => {
     setCartItemsQt(cartItems.reduce((acc, curr) => acc + curr.quantity, 0))
   }, [cartItems]);
-  console.log('address', shippingAddress)
   return (
     <Nav>
       <div className='logo'>

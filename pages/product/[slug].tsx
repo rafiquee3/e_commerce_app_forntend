@@ -2,7 +2,6 @@ import { Layout } from '@/components/Layout'
 import { ProductDetailLayout } from '@/components/Layout/ProductDetailLayout.component'
 import { AddToCartBox } from '@/components/Product/AddToCartBox.component'
 import { ProductType } from '@/components/Product/ProductItem.component'
-import { useCartStore } from '@/components/Store/store'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,16 +10,14 @@ import { NextPageWithLayout } from '../_app'
 import axios from 'axios';
 
 const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
-  const { cartItems } = useCartStore();
-  console.log(cartItems)
   return (
     <>
       <Link href={'/'}>Powrót</Link>
       <Image 
-      src={`${product.image}`} 
-      alt={`image ${product.name}`}
-      width={250}
-      height={250}
+        src={`${product.image}`} 
+        alt={`image ${product.name}`}
+        width={250}
+        height={250}
       >
       </Image>
       <div>{product.name}</div>
@@ -42,22 +39,20 @@ Product.getLayout = function getLayout(page: ReactElement) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products: ProductType[] = await axios.get(
+  const products = await axios.get(
 		`http://localhost:3000/api/products/getAllProducts`
-	);;
-
-  const paths = products.map((product: ProductType) => ({
+	);
+  const paths = products.data.map((product: ProductType) => ({
     params: { slug: product.slug },
   }))
   return { paths, fallback: false }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }: any) => {
-  const products: ProductType[] = await axios.get(
+  const products = await axios.get(
 		`http://localhost:3000/api/products/getAllProducts`
 	);
-  const product = products.filter(product => product.slug === params.slug);
-
+  const product = products.data.filter((product: ProductType) => product.slug === params.slug) || [{}];
   return {
     props: {
       product: product[0],
