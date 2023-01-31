@@ -49,7 +49,7 @@ export const useCartStore = create<CartState>((set) => ({
   cartItems: Cookies.get('cartItems')
   ? JSON.parse(cartItemsCookie) : [],
   shippingAddress: Cookies.get('address')
-  ? JSON.parse(addressCookie) : {location: {}},
+  ? JSON.parse(addressCookie) : '',
   paymentMethod: Cookies.get('paymentMethod')
   ? paymentMethodCookie : '',
   

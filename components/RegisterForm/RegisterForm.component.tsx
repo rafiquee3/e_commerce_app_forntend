@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import Link from "next/link";
 import { UserType } from "@/pages/api/auth/create";
 
 interface Values {

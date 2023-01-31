@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { LoginBttn } from '.';
 import { Menu } from ".";
 import { useCartStore } from '../Store/store';
-import { SessionProvider, useSession } from 'next-auth/react';
 
 const Nav = styled.nav`
   position: fixed;
