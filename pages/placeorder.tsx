@@ -11,7 +11,9 @@ import Link from "next/link";
 import { ProductType } from "@/components/Product/ProductItem.component";
 
 const Container = styled.div`
-
+  .shipping {
+    border: 1px solid black;
+  }
 `
 const Placeorder: NextPageWithLayout = (): JSX.Element => {
   type ArrayOfProducts = ProductType[];
@@ -20,6 +22,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   const [ quantityOfProducts, setQuantityOfProducts] = useState<number>();
   const [ items, setItems] = useState<ArrayOfProducts>();
   const [ address, setAddress ] = useState<any>();
+  const [ payment, setPayment ] = useState<string>();
   const router = useRouter();
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
     setQuantityOfProducts(cartItems.length);
     setItems(cartItems);
     setAddress(shippingAddress);
+    setPayment(paymentMethod);
     if (mounted && !paymentMethod) {
         router.push('/payment');
     }
@@ -43,10 +47,18 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
                 Koszyk jest pusty, <Link style={{color: 'blue'}} href="/">przejdź do sklepu</Link>
             </div>
         ) : (
-            <div>
+          <>
+            <div className="shipping">
                 <h2>Adres dostawy</h2>
                 <p>{address?.location?.name} {address?.location?.surname}, {address?.location?.address}, {address?.location?.postal}, {address?.location?.city}</p>
+                <Link href={"/shipping"}>Edytuj</Link>
             </div>
+            <div className="shipping">
+                <h2>Metoda płatności</h2>
+                <p>{payment}</p>
+                <Link href={"/payment"}>Edytuj</Link>
+            </div>
+          </>
         )}
         </Container>
     </>
