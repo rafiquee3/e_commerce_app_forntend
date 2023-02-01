@@ -8,27 +8,31 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useCartStore } from "@/components/Store/store";
 import Link from "next/link";
+import { ProductType } from "@/components/Product/ProductItem.component";
 
 const Container = styled.div`
 
 `
 const Placeorder: NextPageWithLayout = (): JSX.Element => {
+  type ArrayOfProducts = ProductType[];
   const { data: session } = useSession();
   const { cartItems, shippingAddress, paymentMethod } = useCartStore();
   const [ quantityOfProducts, setQuantityOfProducts] = useState<number>();
+  const [ items, setItems] = useState<ArrayOfProducts>();
+  const [ address, setAddress ] = useState<any>();
   const router = useRouter();
+
   useEffect(() => {
+    let mounted = true;
     setQuantityOfProducts(cartItems.length);
-    if (!session?.user) {
-      router.push(`/login?redirect=/placeorder`);
-    }
-    if (!shippingAddress) {
-        router.push('/shipping');
-    }
-    if (!paymentMethod) {
+    setItems(cartItems);
+    setAddress(shippingAddress);
+    if (mounted && !paymentMethod) {
         router.push('/payment');
     }
-  }, [cartItems.length, paymentMethod, router, session, shippingAddress, shippingAddress.location]);
+    return () => { mounted = false }
+  }, [cartItems, cartItems.length, paymentMethod, router, shippingAddress]);
+  console.log(shippingAddress)
   return (
     <>
         <CheckoutWizard activeStep={3}/>
@@ -36,11 +40,12 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         <h1>Finalizacja zamówienia</h1>
         {quantityOfProducts === 0 ? (
             <div>
-                Koszyk jest pusty. <Link href="/">do sklepu</Link>
+                Koszyk jest pusty, <Link style={{color: 'blue'}} href="/">przejdź do sklepu</Link>
             </div>
         ) : (
             <div>
-                produkty
+                <h2>Adres dostawy</h2>
+                <p>{address?.location?.name} {address?.location?.surname}, {address?.location?.address}, {address?.location?.postal}, {address?.location?.city}</p>
             </div>
         )}
         </Container>

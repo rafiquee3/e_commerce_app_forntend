@@ -15,14 +15,16 @@ const Payment: NextPageWithLayout = (): JSX.Element => {
   const { data: session } = useSession();
   const router = useRouter();
   const {cartItems, shippingAddress, paymentMethod, savePaymentMethod} = useCartStore();
+
   useEffect(() => {
-    if (!session?.user) {
-      router.push(`/login?redirect=/payment`);
-    }
-    if (!shippingAddress.location) {
+    setSelectedPaymentMethod(paymentMethod || '');
+    let mounted = true;
+    if (mounted && !shippingAddress.location) {
       router.push('/shipping');
       }
-  }, [router, session, shippingAddress.location]);
+    return () => {mounted = false}
+  }, [paymentMethod, router, session, shippingAddress.location]);
+
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     if (!selectedPaymentMethod) {
@@ -30,9 +32,9 @@ const Payment: NextPageWithLayout = (): JSX.Element => {
     }
     savePaymentMethod(selectedPaymentMethod);
     Cookies.set('paymentMethod', selectedPaymentMethod);
-
     router.push('/placeorder');
   }
+  console.log('adssadsd')
   return (
     <>
         <CheckoutWizard activeStep={2}/>

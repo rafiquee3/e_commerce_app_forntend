@@ -2,7 +2,7 @@ import { Layout } from '@/components/Layout'
 import { ProductDetailLayout } from '@/components/Layout/ProductDetailLayout.component'
 import { AddToCartBox } from '@/components/Product/AddToCartBox.component'
 import { ProductType } from '@/components/Product/ProductItem.component'
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ReactElement } from 'react'
@@ -47,7 +47,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }))
   return { paths, fallback: false }
 }
-
 export const getStaticProps: GetStaticProps = async ({ params }: any) => {
   const products = await axios.get(
 		`http://localhost:3000/api/products/getAllProducts`

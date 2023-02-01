@@ -1,5 +1,5 @@
 import {LoginForm} from '../components/LoginForm'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Layout } from '../components/Layout'
 import { FormLayout } from '../components/Layout'
 import type { NextPageWithLayout } from './_app'
@@ -13,9 +13,13 @@ const Login: NextPageWithLayout = () => {
   const url: any = redirect;
 
   useEffect(() => {
-    if (session?.user) {
-      router.push(url || `/?redirect=${redirect}`);
+    let mounted = true;
+    if (mounted && session?.user) {
+      console.log('wchodze')
+      router.push(url || '/');
+      return;
     }
+   return () => {mounted = false}
   }, [router, session, redirect, url]);
   return (
     <LoginForm/>

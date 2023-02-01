@@ -12,9 +12,11 @@ const Shipping: NextPageWithLayout = (): JSX.Element => {
   const { data: session } = useSession();
   const router = useRouter();
   useEffect(() => {
-    if (!session?.user) {
+    let mounted = true;
+    if (mounted && !session?.user) {
       router.push(`/login?redirect=/shipping`);
     }
+    return () => {mounted = false}
   }, [router, session]);
   console.log('shipping render')
   return (
