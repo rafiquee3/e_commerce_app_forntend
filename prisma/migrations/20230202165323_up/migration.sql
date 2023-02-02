@@ -8,7 +8,8 @@ CREATE TABLE "User" (
     "hash" TEXT NOT NULL,
     "name" TEXT,
     "surname" TEXT,
-    "refreshToken" TEXT
+    "refreshToken" TEXT,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false
 );
 
 -- CreateTable
@@ -34,6 +35,22 @@ CREATE TABLE "Product" (
     "countInStock" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
     "isFeatured" BOOLEAN NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Order" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "paymentMethod" TEXT NOT NULL,
+    "itemsPrice" REAL NOT NULL,
+    "shippingPrice" REAL NOT NULL,
+    "totalPrice" REAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "surname" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "postal" TEXT NOT NULL,
+    "telephone" INTEGER NOT NULL
 );
 
 -- CreateIndex

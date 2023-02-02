@@ -10,6 +10,7 @@ import { useCartStore } from "@/components/Store/store";
 import Link from "next/link";
 import { ProductType } from "@/components/Product/ProductItem.component";
 import { ProductsList } from "@/components/Product/ProductsList.component";
+import axios from "axios";
 
 const Container = styled.div`
   .summary {
@@ -27,6 +28,9 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   const [ payment, setPayment ] = useState<string>();
   const [ shipping, setShipping ] = useState<number>(25);
   const [ total, setTotal ] = useState<number>(0);
+  const round = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100;
+  const totalItems = round(total);
+  const totalPrice = round(shipping + total);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,7 +45,36 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
     }
     return () => { mounted = false }
   }, [cartItems, cartItems.length, paymentMethod, router, shippingAddress]);
-  console.log(items)
+
+  const placeOrderHandler = async () => {
+    try {
+      const { data } = await axios.post('/api/orders/create', {
+        paymentMethod:  payment,
+        itemsPrice:     totalItems,
+        shippingPrice:  shipping,
+        totalPrice:     totalPrice,
+        name:           address.location.name,
+        surname:        address.location.surname,
+        email:          address.location.email,
+        address:        address.location.address,
+        city:           address.location.city,
+        postal:         address.location.postal,
+        telephone:      address.location.telephone
+      });
+
+      // dispatch({ type: 'CART_CLEAR_ITEMS' });
+      // Cookies.set(
+      //   'cart',
+      //   JSON.stringify({
+      //     ...cart,
+      //     cartItems: [],
+      //   })
+      // );
+      // router.push(`/order/${data._id}`);
+    } catch (err) {
+      //toast.error(getError(err));
+    }
+  };
   return (
     <>
         <CheckoutWizard activeStep={3}/>
@@ -69,10 +102,10 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
                 </div>
                 <div className="summary">
                     <h2>Podsumowanie</h2>
-                    <p>Produkty: {total} PLN</p>
+                    <p>Produkty: {totalItems} PLN</p>
                     <p>Dostawa:  {shipping} PLN</p>
-                    <p>Do zapłaty: {shipping + total} PLN</p>
-                    <button type="button">Zamów</button>
+                    <p>Do zapłaty: {totalPrice} PLN</p>
+                    <button type="button" onClick={placeOrderHandler}>Zamów</button>
                 </div>
               </>
             )}

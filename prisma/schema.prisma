@@ -10,20 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model User {
-  id    Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  login String  @unique
-  email String  @unique
-  hash  String
-  name  String?
-  surname String?
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  login        String   @unique
+  email        String   @unique
+  hash         String
+  name         String?
+  surname      String?
   refreshToken String?
-  isAdmin  Boolean @default(false)
-  posts Post[]
+  isAdmin      Boolean  @default(false)
+  posts        Post[]
 }
 
 model Post {
@@ -36,15 +34,30 @@ model Post {
 }
 
 model Product {
-  name       String   @unique
-  slug       String   @unique
-  category   String
-  image      String
-  price      Int
-  brand      String
-  rating     Float
-  numReviews Int
-  countInStock  Int
-  description String
-  isFeatured  Boolean
+  name         String  @unique
+  slug         String  @unique
+  category     String
+  image        String
+  price        Int
+  brand        String
+  rating       Float
+  numReviews   Int
+  countInStock Int
+  description  String
+  isFeatured   Boolean
+}
+
+model Order {
+  id            Int       @id @default(autoincrement())
+  paymentMethod String
+  itemsPrice    Float
+  shippingPrice Float
+  totalPrice    Float
+  name          String
+  surname       String
+  email         String
+  address       String
+  city          String
+  postal        String
+  telephone     Int
 }
