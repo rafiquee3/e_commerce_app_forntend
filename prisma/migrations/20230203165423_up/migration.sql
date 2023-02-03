@@ -40,6 +40,7 @@ CREATE TABLE "Product" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "products" TEXT NOT NULL,
     "paymentMethod" TEXT NOT NULL,
     "itemsPrice" REAL NOT NULL,
     "shippingPrice" REAL NOT NULL,

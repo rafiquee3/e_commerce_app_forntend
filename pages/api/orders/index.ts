@@ -24,13 +24,14 @@ export default async function handler(
         return;
     }
     try {
-        const data: OrderType = req.body;
+        const data = req.body;
         console.log('data: ', data)
         if (!data) {
             throw new Error('Error...');
         }
         const order = await prisma.order.create({
             data: {
+                products:       data.products,
                 paymentMethod:  data.paymentMethod,
                 itemsPrice:     data.itemsPrice,
                 shippingPrice:  data.shippingPrice,

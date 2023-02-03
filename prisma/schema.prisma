@@ -48,7 +48,8 @@ model Product {
 }
 
 model Order {
-  id            Int       @id @default(autoincrement())
+  id            Int    @id @default(autoincrement())
+  products      String
   paymentMethod String
   itemsPrice    Float
   shippingPrice Float

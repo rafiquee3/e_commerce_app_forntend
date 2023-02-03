@@ -28,29 +28,31 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   const [ payment, setPayment ] = useState<string>();
   const [ shipping, setShipping ] = useState<number>(25);
   const [ total, setTotal ] = useState<number>(0);
-  const round = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100;
-  const totalItems = round(total);
-  const totalPrice = round(shipping + total);
+  const [ totalPrice, setTotalPrice ] = useState<number>();
   const router = useRouter();
+  const round = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100;
 
   useEffect(() => {
     let mounted = true;
+    let total: number = cartItems?.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
     setQuantityOfProducts(cartItems.length);
     setItems(cartItems);
     setAddress(shippingAddress);
     setPayment(paymentMethod);
-    setTotal(cartItems?.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0));
+    setTotal(round(total));
+    setTotalPrice(round(total + shipping));
     if (mounted && !paymentMethod) {
         router.push('/payment');
     }
     return () => { mounted = false }
-  }, [cartItems, cartItems.length, paymentMethod, router, shippingAddress]);
+  }, [cartItems, cartItems.length, paymentMethod, router, shipping, shippingAddress]);
 
   const placeOrderHandler = async () => {
     try {
-      const { data } = await axios.post('/api/orders/create', {
+      const { data } = await axios.post('/api/orders', {
+        products: items?.map((item) => {return `${item.name} ${item.quantity}x ${item.price}PLN`}).join(', '),
         paymentMethod:  payment,
-        itemsPrice:     totalItems,
+        itemsPrice:     total,
         shippingPrice:  shipping,
         totalPrice:     totalPrice,
         name:           address.location.name,
@@ -59,7 +61,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         address:        address.location.address,
         city:           address.location.city,
         postal:         address.location.postal,
-        telephone:      address.location.telephone
+        telephone:      Number(address.location.telephone)
       });
 
       // dispatch({ type: 'CART_CLEAR_ITEMS' });
@@ -80,7 +82,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         <CheckoutWizard activeStep={3}/>
         <Container>
             <h1>Finalizacja zamówienia</h1>
-            {quantityOfProducts === 0 ? (
+            { quantityOfProducts === 0 ? (
                 <div>
                     Koszyk jest pusty, <Link style={{color: 'blue'}} href="/">przejdź do sklepu</Link>
                 </div>
@@ -102,7 +104,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
                 </div>
                 <div className="summary">
                     <h2>Podsumowanie</h2>
-                    <p>Produkty: {totalItems} PLN</p>
+                    <p>Produkty: {total} PLN</p>
                     <p>Dostawa:  {shipping} PLN</p>
                     <p>Do zapłaty: {totalPrice} PLN</p>
                     <button type="button" onClick={placeOrderHandler}>Zamów</button>
