@@ -28,6 +28,7 @@ interface CartState {
   remItem:  (product: ProductType) => void;
   remRecordItem:  (product: ProductType) => void;
   resetItem: () => void;
+  clearCartItem: () => void;
   saveAddress: (data: LocationType) => void;
   savePaymentMethod: (data: string) => void;
 }
@@ -85,6 +86,7 @@ export const useCartStore = create<CartState>((set) => ({
           carteItems: state.cartItems
         }
       }
+      Cookies.set('cartItems', JSON.stringify(cartItems));
       return {
         cartItems,
       }
@@ -94,17 +96,25 @@ export const useCartStore = create<CartState>((set) => ({
     set((state) => {
       const existItem = state.cartItems.find((item) => item.slug === product.slug);
       const cartItems =  existItem ? state.cartItems.filter((item) => item.slug !== existItem.slug) : state.cartItems;
- 
+      Cookies.set('cartItems', JSON.stringify(cartItems));
       return {
         cartItems,
       }
     }); 
   },
   resetItem: () => {
+    Cookies.set('cartItems', '');
+    Cookies.set('address', '');
+    Cookies.set('paymentMethod', '');
     set(() => { return {
       cartItems: [],
       shippingAddress: { location: {}},
       paymentMethod: '',
+    } }); 
+  },
+  clearCartItem: () => {
+    set(() => { return {
+      cartItems: [],
     } }); 
   },
   saveAddress: (data: LocationType) => {
@@ -117,6 +127,7 @@ export const useCartStore = create<CartState>((set) => ({
       postal: data.postal,
       telephone: data.telephone,
     }
+    Cookies.set('address', JSON.stringify({location: address}));
     set((state) => {
       return {
         shippingAddress: { location: address}
@@ -124,6 +135,7 @@ export const useCartStore = create<CartState>((set) => ({
     }); 
   },
   savePaymentMethod: (data: string) => {
+    Cookies.set('paymentMethod', data);
     set((state) => {
       return {
         paymentMethod: data

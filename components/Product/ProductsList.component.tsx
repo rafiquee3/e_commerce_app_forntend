@@ -1,7 +1,9 @@
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CartProductType, useCartStore } from "../Store/store";
+import { ProductType } from "./ProductItem.component";
 
 const Table = styled.table`
     width: 70%;
@@ -24,6 +26,9 @@ export const ProductsList: FC = (): JSX.Element => {
     const [quantity, setQuantity] = useState(0);
     const { addItem, cartItems, remItem, remRecordItem } = useCartStore();
     const decreaseQuantity = (product: CartProductType) => {
+        const existItem = cartItems.find((item) => item.slug === product.slug);
+        const items =  existItem ? cartItems.filter((item) => item.slug !== existItem.slug) : cartItems;
+        
       if (product.quantity === 1) {
           remRecordItem(product);
       } else {

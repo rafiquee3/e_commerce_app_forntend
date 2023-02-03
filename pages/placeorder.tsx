@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ProductType } from "@/components/Product/ProductItem.component";
 import { ProductsList } from "@/components/Product/ProductsList.component";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const Container = styled.div`
   .summary {
@@ -21,7 +22,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   type Product = ProductType & {quantity: number}
   type ArrayOfProducts = Product[];
   const { data: session } = useSession();
-  const { cartItems, shippingAddress, paymentMethod } = useCartStore();
+  const { cartItems, clearCartItem, shippingAddress, paymentMethod } = useCartStore();
   const [ quantityOfProducts, setQuantityOfProducts] = useState<number>();
   const [ items, setItems] = useState<ArrayOfProducts>();
   const [ address, setAddress ] = useState<any>();
@@ -64,14 +65,8 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         telephone:      Number(address.location.telephone)
       });
 
-      // dispatch({ type: 'CART_CLEAR_ITEMS' });
-      // Cookies.set(
-      //   'cart',
-      //   JSON.stringify({
-      //     ...cart,
-      //     cartItems: [],
-      //   })
-      // );
+      clearCartItem();
+      Cookies.set('cartItems', '');
       // router.push(`/order/${data._id}`);
     } catch (err) {
       //toast.error(getError(err));
