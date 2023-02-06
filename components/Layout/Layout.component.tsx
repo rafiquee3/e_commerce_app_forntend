@@ -27,18 +27,18 @@ export const Layout = ({title, children, session}: {title: ReactNode, children: 
       <Navbar/>
       <Main>
         <ToastContainer 
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        style={{marginTop: "40px"}}/>
-        {children}
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          style={{marginTop: "40px"}}/>
+          {children}
       </Main>
       <Footer />
     </SessionProvider>

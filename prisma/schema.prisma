@@ -22,6 +22,7 @@ model User {
   refreshToken String?
   isAdmin      Boolean  @default(false)
   posts        Post[]
+  orders       Order[]
 }
 
 model Post {
@@ -54,6 +55,7 @@ model Order {
   itemsPrice    Float
   shippingPrice Float
   totalPrice    Float
+  user          User  @relation(fields: [authorLogin], references: [login])
   name          String
   surname       String
   email         String
@@ -61,4 +63,5 @@ model Order {
   city          String
   postal        String
   telephone     Int
+  authorLogin   String
 }

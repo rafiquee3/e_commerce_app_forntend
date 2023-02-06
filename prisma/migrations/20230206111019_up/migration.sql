@@ -51,7 +51,9 @@ CREATE TABLE "Order" (
     "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "postal" TEXT NOT NULL,
-    "telephone" INTEGER NOT NULL
+    "telephone" INTEGER NOT NULL,
+    "authorLogin" TEXT NOT NULL,
+    CONSTRAINT "Order_authorLogin_fkey" FOREIGN KEY ("authorLogin") REFERENCES "User" ("login") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex

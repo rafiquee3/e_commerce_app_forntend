@@ -23,7 +23,6 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   type ArrayOfProducts = Product[];
   const { data: session } = useSession();
   const { cartItems, clearCartItem, shippingAddress, paymentMethod } = useCartStore();
-  const [ quantityOfProducts, setQuantityOfProducts] = useState<number>();
   const [ items, setItems] = useState<ArrayOfProducts>();
   const [ address, setAddress ] = useState<any>();
   const [ payment, setPayment ] = useState<string>();
@@ -36,7 +35,6 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   useEffect(() => {
     let mounted = true;
     let total: number = cartItems?.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-    setQuantityOfProducts(cartItems.length);
     setItems(cartItems);
     setAddress(shippingAddress);
     setPayment(paymentMethod);
@@ -49,7 +47,11 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   }, [cartItems, cartItems.length, paymentMethod, router, shipping, shippingAddress]);
 
   const placeOrderHandler = async () => {
+    const userLogin = session?.user?.login;
+   
     try {
+      const user = await axios.get(`/api/user/${userLogin}`);
+      console.log(user)
       const { data } = await axios.post('/api/orders', {
         products: items?.map((item) => {return `${item.name} ${item.quantity}x ${item.price}PLN`}).join(', '),
         paymentMethod:  payment,
@@ -62,7 +64,8 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         address:        address.location.address,
         city:           address.location.city,
         postal:         address.location.postal,
-        telephone:      Number(address.location.telephone)
+        telephone:      Number(address.location.telephone),
+        authorLogin:    user.data.login,
       });
 
       clearCartItem();

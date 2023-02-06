@@ -4,35 +4,56 @@ import { PrismaClient } from '@prisma/client'
 import bcryptjs from 'bcryptjs';
 
 const prisma = new PrismaClient();
+type Cos = {
+  id: string;
+  login: string;
+  name: string;
+  email: string;
+  surname: string;
+  isAdmin: boolean;
+}
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
+
   // https://next-auth.js.org/configuration/providers
   providers: [
-
     CredentialsProvider({
-        async authorize(credentials) {
-            console.log(credentials)
-        const user = await prisma.user.findUnique({
-            where: {
-                login: credentials?.login,
-            },
-            });
+      async authorize(credentials: any) {
+          console.log(credentials)
+          const user = await prisma.user.findUnique({
+          where: {
+              login: credentials?.login,
+          },
+          });
+        
+          if (user && bcryptjs.compareSync(credentials.hash, user.hash)) {
           
-            if (user && bcryptjs.compareSync(credentials.hash, user.hash)) {
-            console.log(user)
-            return {
-              id: user.id,
-              login: user.login,
-              name: user.name,
-              email: user.email,
-              isAdmin: user.isAdmin,
-            };
-          }
-          throw new Error('Invalid email or password');
-        },
-      }),
+          return {
+            id: user.id,
+            login: user.login,
+            name: user.name,
+            email: user.email,
+            surname: user.surname,
+            isAdmin: user.isAdmin,
+          };
+        }
+        throw new Error('Invalid email or password'); 
+    }}),
   ],
+  // id           Int      @id @default(autoincrement())
+  // createdAt    DateTime @default(now())
+  // updatedAt    DateTime @updatedAt
+  // login        String   @unique
+  // email        String   @unique
+  // hash         String
+  // name         String?
+  // surname      String?
+  // refreshToken String?
+  // isAdmin      Boolean  @default(false)
+  // posts        Post[]
+  // orders       Order[]
+
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
   // https://next-auth.js.org/configuration/databases
   //
@@ -96,15 +117,19 @@ export default NextAuth({
     // async redirect({ url, baseUrl }) { return baseUrl },
     
     async jwt({ token, user, account, profile, isNewUser }) { 
-        if (user?.id) token.id = user.id;
-        if (user?.login) token.login = user.login;
-        if (user?.isAdmin) token.isAdmin = user.isAdmin;
+        if (user) {
+          token.id = user.id;
+          token.login = user.login;
+          token.isAdmin = user.isAdmin;
+        }
         return token 
     },
     async session({ session, token, user }) { 
-        if (token?.id) session.user.id = token.id;
-        if (token?.login) session.user.login = token.login;
-        if (token?.isAdmin) session.user.isAdmin = token.isAdmin;
+        if (token) {
+          session.user.id = token.id;
+          session.user.login = token.login;
+          session.user.isAdmin = token.isAdmin;
+        }
         return session 
     },
   },

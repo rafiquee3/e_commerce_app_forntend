@@ -42,7 +42,8 @@ export default async function handler(
                 address:        data.address,
                 city:           data.city,
                 postal:         data.postal,
-                telephone:      data.telephone
+                telephone:      data.telephone,
+                authorLogin:    data.authorLogin
             },
         });
         console.log('order: ', order);
