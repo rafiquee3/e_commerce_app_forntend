@@ -62,12 +62,13 @@ export const useCartStore = create<CartState>((set) => ({
         item.name === existItem.name ? {...newItem, quantity: item.quantity + 1, countInStock: item.countInStock - 1} : item
       )
       : [...state.cartItems, {...newItem, countInStock: product.countInStock - 1}];
-      Cookies.set('cartItems', JSON.stringify(cartItems));
+      
       if (product.countInStock <= 0) {
         return {
           carteItems: state.cartItems
         }
       }
+      Cookies.set('cartItems', JSON.stringify(cartItems));
       return {
         cartItems,
       }
@@ -113,6 +114,7 @@ export const useCartStore = create<CartState>((set) => ({
     } }); 
   },
   clearCartItem: () => {
+    Cookies.set('cartItems', '');
     set(() => { return {
       cartItems: [],
     } }); 

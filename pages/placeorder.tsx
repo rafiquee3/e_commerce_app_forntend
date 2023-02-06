@@ -66,7 +66,6 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
       });
 
       clearCartItem();
-      Cookies.set('cartItems', '');
       // router.push(`/order/${data._id}`);
     } catch (err) {
       //toast.error(getError(err));
@@ -77,7 +76,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         <CheckoutWizard activeStep={3}/>
         <Container>
             <h1>Finalizacja zamówienia</h1>
-            { quantityOfProducts === 0 ? (
+            { total === 0 ? (
                 <div>
                     Koszyk jest pusty, <Link style={{color: 'blue'}} href="/">przejdź do sklepu</Link>
                 </div>
