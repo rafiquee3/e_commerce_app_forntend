@@ -45,8 +45,8 @@ const Cart: NextPageWithLayout = (): JSX.Element => {
     setTotal(cartItems.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0));
   }, [cartItems])
   const handlePayment = () => {
-    console.log(url)
-    router.push(url || `/shipping?redirect=${'/cart'}`);
+    console.log('url: ', url)
+    router.push(url || `/shipping`);
   }
   return (
     <Container>

@@ -24,7 +24,6 @@ export default async function handler(
             login,
             },
         });
-        console.log('login: ', typeof req.query.login)
         if (sessionLogin !== login) {
             throw new Error('Dostęp nieupowaznionym osoba zabroniony');
         }

@@ -1,3 +1,4 @@
+import { ProductType } from '@/components/Product/ProductItem.component'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 import { getSession } from 'next-auth/react';
@@ -16,20 +17,16 @@ export default async function handler(
         if (!session) {
             return res.status(401).send('Musisz być zalogowany');
         }
-        const id: number = Number(req.query.id);
-        const order = await prisma.order.findUnique({
+        const orders = await prisma.order.findMany({
             where: {
-            id: id,
-            },
+                authorLogin: session.user.login,
+            }
         });
 
-        if (!order) {
-            throw new Error('Zamówienie o podanym numerze id nie istnieje');
+        if (!orders) {
+            throw new Error('Brak zamówień');
         }
-        if (order.authorLogin !== session.user.login) {
-            throw new Error('Brak dostępu...');
-        }
-        res.status(200).json(order);
+        res.status(200).json(orders);
     } catch (err: any) {
         res.json({"error": err.message})
     }

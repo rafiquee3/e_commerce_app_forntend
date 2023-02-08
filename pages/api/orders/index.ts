@@ -46,7 +46,6 @@ export default async function handler(
                 authorLogin:    data.authorLogin
             },
         });
-        console.log('order: ', order);
         if (!order) {
             throw new Error('Error...');
         }
