@@ -21,6 +21,7 @@ const Login: NextPageWithLayout = () => {
     }
    return () => {mounted = false}
   }, [router, session, redirect, url]);
+  console.log(session)
   return (
     <LoginForm/>
   )

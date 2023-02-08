@@ -17,14 +17,14 @@ export default async function handler(
             return res.status(401).send('Musisz być zalogowany');
         }
 
-        const login: string = req.query.login;
+        const login: any = req.query.login;
         const sessionLogin: string = session.user?.login;
         const user = await prisma.user.findUnique({
             where: {
             login,
             },
         });
-        console.log('user zz', session)
+        console.log('login: ', typeof req.query.login)
         if (sessionLogin !== login) {
             throw new Error('Dostęp nieupowaznionym osoba zabroniony');
         }

@@ -4,14 +4,6 @@ import { PrismaClient } from '@prisma/client'
 import bcryptjs from 'bcryptjs';
 
 const prisma = new PrismaClient();
-type Cos = {
-  id: string;
-  login: string;
-  name: string;
-  email: string;
-  surname: string;
-  isAdmin: boolean;
-}
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
@@ -22,7 +14,6 @@ export default NextAuth({
       type: 'credentials',
       credentials:{},
       async authorize(credentials: any) {
-          console.log(credentials)
           const user = await prisma.user.findUnique({
           where: {
               login: credentials?.login,
@@ -110,22 +101,21 @@ export default NextAuth({
   callbacks: {
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
-    
     async jwt({ token, user, account, profile, isNewUser }) { 
         if (user) {
           token.id = user.id;
           token.login = user.login;
           token.isAdmin = user.isAdmin;
         }
-        return token 
+        return Promise.resolve(token); 
     },
-    async session({ session, token, user }) { 
-        if (token) {
-          session.user.id = token.id;
-          session.user.login = token.login;
-          session.user.isAdmin = token.isAdmin;
-        }
-        return session 
+    async session({ session, token, user }) {
+      if (token) {
+          session.user.id = Number(token.id);
+          session.user.login = '' + token.login;
+          session.user.isAdmin = Boolean(token.isAdmin);
+      }
+      return Promise.resolve(session)  
     },
   },
 
