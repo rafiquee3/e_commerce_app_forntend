@@ -25,10 +25,11 @@ export const ProductsList: FC = (): JSX.Element => {
     const [total, setTotal] = useState(0);
     const [quantity, setQuantity] = useState(0);
     const { addItem, cartItems, remItem, remRecordItem } = useCartStore();
+    
     const decreaseQuantity = (product: CartProductType) => {
         const existItem = cartItems.find((item) => item.slug === product.slug);
         const items =  existItem ? cartItems.filter((item) => item.slug !== existItem.slug) : cartItems;
-        
+
       if (product.quantity === 1) {
           remRecordItem(product);
       } else {

@@ -19,6 +19,8 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
     CredentialsProvider({
+      type: 'credentials',
+      credentials:{},
       async authorize(credentials: any) {
           console.log(credentials)
           const user = await prisma.user.findUnique({
@@ -29,16 +31,9 @@ export default NextAuth({
         
           if (user && bcryptjs.compareSync(credentials.hash, user.hash)) {
           
-          return {
-            id: user.id,
-            login: user.login,
-            name: user.name,
-            email: user.email,
-            surname: user.surname,
-            isAdmin: user.isAdmin,
-          };
+          return user;
         }
-        throw new Error('Invalid email or password'); 
+        return Promise.reject(new Error('Invalid email or password')); 
     }}),
   ],
   // id           Int      @id @default(autoincrement())

@@ -17,8 +17,8 @@ export default async function handler(
             return res.status(401).send('Musisz być zalogowany');
         }
 
-        const login: any = req.query.login;
-        const sessionLogin: any = session.user?.login;
+        const login: string = req.query.login;
+        const sessionLogin: string = session.user?.login;
         const user = await prisma.user.findUnique({
             where: {
             login,

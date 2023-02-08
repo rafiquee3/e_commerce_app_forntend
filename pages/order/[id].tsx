@@ -9,7 +9,7 @@ import { ReactElement } from 'react'
 import { NextPageWithLayout } from '../_app'
 import axios from 'axios';
 
-const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
+const Order: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
   return (
     <>
       <Link href={'/'}>Powrót</Link>
@@ -30,7 +30,7 @@ const Product: NextPageWithLayout = ({ product }: { product: ProductType } | any
   )
 }
 
-Product.getLayout = function getLayout(page: ReactElement) {
+Order.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout title={''}>
       <ProductDetailLayout>{page}</ProductDetailLayout>
@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps = async ({ params }: any) => {
   const products = await axios.get(
 		`http://localhost:3000/api/products/getAllProducts`
 	);
-  const product = products.data.filter((product: ProductType) => product.slug === params.slug) || [{}];
+  const order = products.data.filter((product: ProductType) => product.slug === params.slug) || [{}];
   return {
     props: {
       product: product[0],
