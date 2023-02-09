@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import Image from "next/image";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useReducer } from "react";
 import styled from "styled-components";
 import { CartProductType, useCartStore } from "../Store/store";
 import { ProductType } from "./ProductItem.component";
@@ -21,6 +21,59 @@ const Table = styled.table`
         text-align: left;
     }
 `
+enum OrderActionKind {
+    FETCH_REQUEST = 'FETCH_REQUEST',
+    FETCH_SUCCESS = 'FETCH_SUCCESS',
+    FETCH_FAIL = 'FETCH_FAIL',
+    PAY_REQUEST = 'PAY_REQUEST',
+    PAY_SUCCESS = 'PAY_SUCCESS',
+    PAY_FAIL = 'PAY_FAIL',
+    PAY_RESET = 'PAY_RESET'
+}
+type OrderState = {
+    loading: boolean;
+    error: string;
+    successPay: boolean;
+    loadingPay: boolean;
+}
+type OrderAction = {
+    type: OrderActionKind;
+    payload: any;
+}
+function reducer(state: OrderState, action: OrderAction) {
+    switch (action.type) {
+      case OrderActionKind.FETCH_REQUEST:
+        return { ...state, loading: true, error: '' };
+      case OrderActionKind.FETCH_SUCCESS:
+        return { ...state, loading: false, order: action.payload, error: '' };
+      case OrderActionKind.FETCH_FAIL:
+        return { ...state, loading: false, error: action.payload };
+      case OrderActionKind.PAY_REQUEST:
+        return { ...state, loadingPay: true };
+      case OrderActionKind.PAY_SUCCESS:
+        return { ...state, loadingPay: false, successPay: true };
+      case OrderActionKind.PAY_FAIL:
+        return { ...state, loadingPay: false, errorPay: action.payload };
+      case OrderActionKind.PAY_RESET:
+        return { ...state, loadingPay: false, successPay: false, errorPay: '' };
+  
+    //   case 'DELIVER_REQUEST':
+    //     return { ...state, loadingDeliver: true };
+    //   case 'DELIVER_SUCCESS':
+    //     return { ...state, loadingDeliver: false, successDeliver: true };
+    //   case 'DELIVER_FAIL':
+    //     return { ...state, loadingDeliver: false };
+    //   case 'DELIVER_RESET':
+    //     return {
+    //       ...state,
+    //       loadingDeliver: false,
+    //       successDeliver: false,
+    //     };
+  
+      default:
+        state;
+    }
+}
 export const ProductsList: FC = (): JSX.Element => {
     const [total, setTotal] = useState(0);
     const [quantity, setQuantity] = useState(0);
