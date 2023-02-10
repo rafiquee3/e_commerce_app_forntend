@@ -8,29 +8,73 @@ import Link from 'next/link'
 import { ReactElement } from 'react'
 import { NextPageWithLayout } from '../_app'
 import axios from 'axios';
+import { OrderType } from '../api/orders'
+import Cookies from "js-cookie";
 
-const Order: NextPageWithLayout = ({ product }: { product: ProductType } | any): JSX.Element => {
+// enum OrderActionKind {
+//   FETCH_REQUEST = 'FETCH_REQUEST',
+//   FETCH_SUCCESS = 'FETCH_SUCCESS',
+//   FETCH_FAIL = 'FETCH_FAIL',
+//   PAY_REQUEST = 'PAY_REQUEST',
+//   PAY_SUCCESS = 'PAY_SUCCESS',
+//   PAY_FAIL = 'PAY_FAIL',
+//   PAY_RESET = 'PAY_RESET'
+// }
+// type OrderState = {
+//   loading: boolean;
+//   error: string;
+//   successPay: boolean;
+//   loadingPay: boolean;
+// }
+// type OrderAction = {
+//   type: OrderActionKind;
+//   payload: any;
+// }
+// function reducer(state: OrderState, action: OrderAction) {
+//   switch (action.type) {
+//     case OrderActionKind.FETCH_REQUEST:
+//       return { ...state, loading: true, error: '' };
+//     case OrderActionKind.FETCH_SUCCESS:
+//       return { ...state, loading: false, order: action.payload, error: '' };
+//     case OrderActionKind.FETCH_FAIL:
+//       return { ...state, loading: false, error: action.payload };
+//     case OrderActionKind.PAY_REQUEST:
+//       return { ...state, loadingPay: true };
+//     case OrderActionKind.PAY_SUCCESS:
+//       return { ...state, loadingPay: false, successPay: true };
+//     case OrderActionKind.PAY_FAIL:
+//       return { ...state, loadingPay: false, errorPay: action.payload };
+//     case OrderActionKind.PAY_RESET:
+//       return { ...state, loadingPay: false, successPay: false, errorPay: '' };
+
+//   //   case 'DELIVER_REQUEST':
+//   //     return { ...state, loadingDeliver: true };
+//   //   case 'DELIVER_SUCCESS':
+//   //     return { ...state, loadingDeliver: false, successDeliver: true };
+//   //   case 'DELIVER_FAIL':
+//   //     return { ...state, loadingDeliver: false };
+//   //   case 'DELIVER_RESET':
+//   //     return {
+//   //       ...state,
+//   //       loadingDeliver: false,
+//   //       successDeliver: false,
+//   //     };
+
+//     default:
+//       state;
+//   }
+// }
+const login = Cookies.get('user');
+const OrderScreen: NextPageWithLayout = ({ order }: any): JSX.Element => {
+  console.log('order', order)
   return (
     <>
-      <Link href={'/'}>Powrót</Link>
-      <Image 
-        src={`${product.image}`} 
-        alt={`image ${product.name}`}
-        width={250}
-        height={250}
-      >
-      </Image>
-      <div>{product.name}</div>
-      <div>{product.category}</div>
-      <div>{product.brand}</div>
-      <div>{product.numReviews}</div>
-      <div>{product.description}</div>
-      <AddToCartBox product={product} />
+      <p>{order.id}</p>
     </>
   )
 }
 
-Order.getLayout = function getLayout(page: ReactElement) {
+OrderScreen.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout title={''}>
       <ProductDetailLayout>{page}</ProductDetailLayout>
@@ -39,24 +83,28 @@ Order.getLayout = function getLayout(page: ReactElement) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products = await axios.get(
-		`http://localhost:3000/api/products/getAllProducts`
+  console.log('heja')
+  const orders = await axios.get(
+		`http://localhost:3000/api/orders/getAllOrders`
 	);
-  const paths = products.data.map((product: ProductType) => ({
-    params: { slug: product.slug },
-  }))
+  console.log('dsaads')
+  const paths = orders.data.map((order: OrderType & { id: string }) => {
+    return {
+      params: { id: '' + order.id },
+    }
+  })
   return { paths, fallback: false }
 }
 export const getStaticProps: GetStaticProps = async ({ params }: any) => {
-  const products = await axios.get(
-		`http://localhost:3000/api/products/getAllProducts`
+  const order = await axios.get(
+		`http://localhost:3000/api/orders/${params.id}`
 	);
-  const order = products.data.filter((product: ProductType) => product.slug === params.slug) || [{}];
+
   return {
     props: {
-      product: product[0],
+      order: order.data
     },
   }
 }
 
-export default Product;
+export default OrderScreen;

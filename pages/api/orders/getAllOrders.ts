@@ -1,7 +1,9 @@
 import { ProductType } from '@/components/Product/ProductItem.component'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
-import { getSession } from 'next-auth/react';
+import  { getServerSession }  from "next-auth/next";
+import { getToken } from "next-auth/jwt"
+import { authOptions } from "./../auth/[...nextauth]"
 
 const prisma = new PrismaClient();
 
@@ -9,20 +11,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    if (req.method !== 'GET') {
+    const session = await getServerSession(req, res, authOptions);
+    const secret = process.env.NEXTAUTH_SECRET;
+    const token = await getToken({ req, secret });
+    console.log('session: ', session)
+    console.log('token: ', token)
+    const login = req.body.login;
+    if (req.method !== 'POST') {
         return;
     }
     try {
-        const session = await getSession({req});
-        if (!session) {
+        if (!login) {
             return res.status(401).send('Musisz być zalogowany');
         }
         const orders = await prisma.order.findMany({
             where: {
-                authorLogin: session.user.login,
+                authorLogin: login,
             }
         });
-
         if (!orders) {
             throw new Error('Brak zamówień');
         }

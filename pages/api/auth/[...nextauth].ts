@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaClient } from '@prisma/client'
 import bcryptjs from 'bcryptjs';
@@ -6,8 +6,7 @@ import bcryptjs from 'bcryptjs';
 const prisma = new PrismaClient();
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
-export default NextAuth({
-
+export const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers
   providers: [
     CredentialsProvider({
@@ -22,7 +21,7 @@ export default NextAuth({
         
           if (user && bcryptjs.compareSync(credentials.hash, user.hash)) {
           
-          return user;
+          return Promise.resolve(user);
         }
         return Promise.reject(new Error('Invalid email or password')); 
     }}),
@@ -73,7 +72,7 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/options#jwt
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
-    secret: process.env.SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     // Set to true to use encryption (default: false)
     // encryption: true,
     // You can define your own encode/decode functions for signing and encryption
@@ -81,7 +80,7 @@ export default NextAuth({
     // encode: async ({ secret, token, maxAge }) => {},
     // decode: async ({ secret, token, maxAge }) => {},
   },
-
+  secret: process.env.NEXTAUTH_SECRET,
   // You can define custom pages to override the built-in ones. These will be regular Next.js pages
   // so ensure that they are placed outside of the '/api' folder, e.g. signIn: '/auth/mycustom-signin'
   // The routes shown here are the default URLs that will be used when a custom
@@ -125,4 +124,5 @@ export default NextAuth({
 
   // Enable debug messages in the console if you are having problems
   debug: false,
-})
+}
+export default NextAuth(authOptions);
