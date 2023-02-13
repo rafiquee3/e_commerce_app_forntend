@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: 'credentials',
       credentials:{},
-      async authorize(credentials: any) {
+      async authorize(credentials: any, req) {
           const user = await prisma.user.findUnique({
           where: {
               login: credentials?.login,
@@ -101,6 +101,7 @@ export const authOptions: NextAuthOptions = {
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
     async jwt({ token, user, account, profile, isNewUser }) { 
+      console.log('sraka', token)
         if (user) {
           token.id = user.id;
           token.login = user.login;

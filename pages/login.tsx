@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 const Login: NextPageWithLayout = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { redirect } = router.query;
   const url: any = redirect;
@@ -21,7 +21,7 @@ const Login: NextPageWithLayout = () => {
     }
    return () => {mounted = false}
   }, [router, session, redirect, url]);
-  console.log(session)
+  console.log('sesja zz:', status)
   return (
     <LoginForm/>
   )

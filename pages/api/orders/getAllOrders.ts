@@ -1,9 +1,10 @@
 import { ProductType } from '@/components/Product/ProductItem.component'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
-import  { getServerSession }  from "next-auth/next";
+import { unstable_getServerSession } from "next-auth/next";
 import { getToken } from "next-auth/jwt"
 import { authOptions } from "./../auth/[...nextauth]"
+import { getSession } from 'next-auth/react'
 
 const prisma = new PrismaClient();
 
@@ -11,19 +12,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const session = await getServerSession(req, res, authOptions);
+    const session = await unstable_getServerSession(req, res, authOptions);
+    const session1 = await getSession({ req }) 
     const secret = process.env.NEXTAUTH_SECRET;
-    const token = await getToken({ req, secret });
-    console.log('session: ', session)
+    const token = await getToken({
+        req: req,
+        secret: secret,
+        raw: true,
+      });
+    console.log('session: ', session1)
     console.log('token: ', token)
     const login = req.body.login;
-    if (req.method !== 'POST') {
-        return;
-    }
+    // if (req.method !== 'POST') {
+    //     return;
+    // }
     try {
-        if (!login) {
-            return res.status(401).send('Musisz być zalogowany');
-        }
+        // if (!login) {
+        //     return res.status(401).send('Musisz być zalogowany');
+        // }
         const orders = await prisma.order.findMany({
             where: {
                 authorLogin: login,

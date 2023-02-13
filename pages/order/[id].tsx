@@ -66,7 +66,9 @@ import Cookies from "js-cookie";
 // }
 const login = Cookies.get('user');
 const OrderScreen: NextPageWithLayout = ({ order }: any): JSX.Element => {
+  console.log('madafaka')
   console.log('order', order)
+  console.log('user_cookies: ', login)
   return (
     <>
       <p>{order.id}</p>
@@ -84,8 +86,8 @@ OrderScreen.getLayout = function getLayout(page: ReactElement) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   console.log('heja')
-  const orders = await axios.get(
-		`http://localhost:3000/api/orders/getAllOrders`
+  const orders = await axios.post(
+		`http://localhost:3000/api/orders/getAllOrders`, login
 	);
   console.log('dsaads')
   const paths = orders.data.map((order: OrderType & { id: string }) => {

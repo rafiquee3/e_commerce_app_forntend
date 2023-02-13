@@ -19,7 +19,7 @@ export default async function handler(
         const id: number = Number(req.query.id);
         const order = await prisma.order.findUnique({
             where: {
-            id: id,
+                id: id,
             },
         });
 
