@@ -1,14 +1,8 @@
 import { Layout } from '@/components/Layout'
 import { ProductDetailLayout } from '@/components/Layout/ProductDetailLayout.component'
-import { AddToCartBox } from '@/components/Product/AddToCartBox.component'
-import { ProductType } from '@/components/Product/ProductItem.component'
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
 import { ReactElement, useEffect, useState } from 'react'
 import { NextPageWithLayout } from '../_app'
 import axios from 'axios';
-import { OrderType } from '../api/orders'
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router';
 import useSWR from "swr";
