@@ -2,12 +2,14 @@ import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaClient } from '@prisma/client'
 import bcryptjs from 'bcryptjs';
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 
 const prisma = new PrismaClient();
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       type: 'credentials',
@@ -101,7 +103,6 @@ export const authOptions: NextAuthOptions = {
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
     async jwt({ token, user, account, profile, isNewUser }) { 
-      console.log('sraka', token)
         if (user) {
           token.id = user.id;
           token.login = user.login;
@@ -115,7 +116,8 @@ export const authOptions: NextAuthOptions = {
           session.user.login = '' + token.login;
           session.user.isAdmin = Boolean(token.isAdmin);
       }
-      return Promise.resolve(session)  
+      return Promise.resolve({...session,
+        token,})  
     },
   },
 

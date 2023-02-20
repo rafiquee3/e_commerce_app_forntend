@@ -12,16 +12,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const session = await unstable_getServerSession(req, res, authOptions);
+    //const session = await unstable_getServerSession(req, res, authOptions);
     const session1 = await getSession({ req }) 
     const secret = process.env.NEXTAUTH_SECRET;
+    const session = await getSession({ req });
     const token = await getToken({
         req: req,
         secret: secret,
-        raw: true,
       });
-    console.log('session: ', session1)
-    console.log('token: ', token)
+    console.log('session getSession: ', session)
+    console.log('token ss: ', token)
     const login = req.body.login;
     // if (req.method !== 'POST') {
     //     return;
