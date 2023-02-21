@@ -34,7 +34,6 @@ const Payment: NextPageWithLayout = (): JSX.Element => {
     Cookies.set('paymentMethod', selectedPaymentMethod);
     router.push('/placeorder');
   }
-  console.log('adssadsd')
   return (
     <>
         <CheckoutWizard activeStep={2}/>

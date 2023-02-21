@@ -11,7 +11,6 @@ import Link from "next/link";
 import { ProductType } from "@/components/Product/ProductItem.component";
 import { ProductsList } from "@/components/Product/ProductsList.component";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const Container = styled.div`
   .summary {
@@ -46,34 +45,48 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
     return () => { mounted = false }
   }, [cartItems, cartItems.length, paymentMethod, router, shipping, shippingAddress]);
 
+  const checkStock =   async () => {
+    const result = await items?.map(async (item) => {
+      const product: ProductType & {quantity: number} = await axios.get(`/api/products/${item.slug}`);
+      console.log('product: ', product, 'item: ', item.quantity)
+      return {
+        slug: item.slug,
+        available: product.data.countInStock >= item.quantity ? true : false
+      }
+    });
+    return result;
+  }
+
   const placeOrderHandler = async () => {
     const userLogin = session?.user?.login;
-   
+    const available =  await checkStock();
+    console.log('available: ', available);
     try {
-      const user = await axios.get(`/api/user/${userLogin}`);
-      console.log(user)
-      const { data } = await axios.post('/api/orders', {
-        products: items?.map((item) => {return `${item.name} ${item.quantity}x ${item.price}PLN`}).join(', '),
-        paymentMethod:  payment,
-        itemsPrice:     total,
-        shippingPrice:  shipping,
-        totalPrice:     totalPrice,
-        name:           address.location.name,
-        surname:        address.location.surname,
-        email:          address.location.email,
-        address:        address.location.address,
-        city:           address.location.city,
-        postal:         address.location.postal,
-        telephone:      Number(address.location.telephone),
-        authorLogin:    user.data.login,
-      });
+    //   const user = await axios.get(`/api/user/${userLogin}`);
+    //   console.log(user)
+    //   const { data } = await axios.post('/api/orders', {
+    //     products: items?.map((item) => {return `${item.name} ${item.quantity}x ${item.price}PLN`}).join(', '),
+    //     paymentMethod:  payment,
+    //     itemsPrice:     total,
+    //     shippingPrice:  shipping,
+    //     totalPrice:     totalPrice,
+    //     name:           address.location.name,
+    //     surname:        address.location.surname,
+    //     email:          address.location.email,
+    //     address:        address.location.address,
+    //     city:           address.location.city,
+    //     postal:         address.location.postal,
+    //     telephone:      Number(address.location.telephone),
+    //     authorLogin:    user.data.login,
+    //   });
 
-      clearCartItem();
+    //   clearCartItem();
       // router.push(`/order/${data._id}`);
     } catch (err) {
       //toast.error(getError(err));
     }
   };
+
   return (
     <>
         <CheckoutWizard activeStep={3}/>

@@ -72,7 +72,6 @@ const OrderScreen: NextPageWithLayout = (): JSX.Element => {
   if (error) return <div>Wystąpił błąd podczas ładowania</div>;
   if (!data) return <div>Ładownaie...</div>
   if (data.error) return <div>{data.error}</div>
-  console.log('data: ', data)
   return (
     <>
       <h2>Dane zamówienia nr: {data.id}</h2>
