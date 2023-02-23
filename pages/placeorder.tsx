@@ -19,10 +19,12 @@ const Container = styled.div`
 `
 const Placeorder: NextPageWithLayout = (): JSX.Element => {
   type Product = ProductType & {quantity: number}
-  type ArrayOfProducts = Product[];
+  type ArrayOfProductsQ = Product[];
+  type ArrayOfProducts = ProductType[];
   const { data: session } = useSession();
   const { cartItems, clearCartItem, shippingAddress, paymentMethod } = useCartStore();
-  const [ items, setItems] = useState<ArrayOfProducts>();
+  const [ items, setItems] = useState<ArrayOfProductsQ>();
+  const [ productsDB, setProductsDB ] = useState<ArrayOfProducts>();
   const [ address, setAddress ] = useState<any>();
   const [ payment, setPayment ] = useState<string>();
   const [ shipping, setShipping ] = useState<number>(25);
@@ -39,27 +41,29 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
     setPayment(paymentMethod);
     setTotal(round(total));
     setTotalPrice(round(total + shipping));
+
     if (mounted && !paymentMethod) {
         router.push('/payment');
     }
     return () => { mounted = false }
   }, [cartItems, cartItems.length, paymentMethod, router, shipping, shippingAddress]);
 
-  const checkStock =   async () => {
-    const result = await items?.map(async (item) => {
-      const product: ProductType & {quantity: number} = await axios.get(`/api/products/${item.slug}`);
-      console.log('product: ', product, 'item: ', item.quantity)
-      return {
-        slug: item.slug,
-        available: product.data.countInStock >= item.quantity ? true : false
-      }
-    });
-    return result;
+  const checkStock = async() => {
+    if (items?.length)
+    try {
+      const products: any = await Promise.all(items.map( async (item) => {     
+        const response = await axios.get(`/api/products/${item.slug}`);
+        return {slug: response.data.slug, availability: response.data.countInStock >= item.quantity ? true : false}
+      }));
+      return products;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  const placeOrderHandler = async () => {
+  const placeOrderHandler =  async() => {
     const userLogin = session?.user?.login;
-    const available =  await checkStock();
+    const available =   await checkStock();
     console.log('available: ', available);
     try {
     //   const user = await axios.get(`/api/user/${userLogin}`);
@@ -86,7 +90,6 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
       //toast.error(getError(err));
     }
   };
-
   return (
     <>
         <CheckoutWizard activeStep={3}/>
