@@ -26,6 +26,7 @@ interface CartState {
   paymentMethod: string;
   addItem: (product: ProductType) => void;
   remItem:  (product: ProductType) => void;
+  repItem:  (product: any) => void;
   remRecordItem:  (product: ProductType) => void;
   resetItem: () => void;
   clearCartItem: () => void;
@@ -88,6 +89,24 @@ export const useCartStore = create<CartState>((set) => ({
         }
       }
       Cookies.set('cartItems', JSON.stringify(cartItems));
+      return {
+        cartItems,
+      }
+    }); 
+  },
+  repItem: (product: any) => {
+    set((state) => {
+      //const cartItems =  [...state.cartItems, product];
+      const cartItems = state.cartItems.map((item) => {
+        if (item.slug === product.slug) {
+          item.quantity = product.quantity;
+          return item;
+        } else {
+          return item;
+        }
+      })
+      Cookies.set('cartItems', JSON.stringify(cartItems));
+      console.log('madafaka: ', cartItems)
       return {
         cartItems,
       }

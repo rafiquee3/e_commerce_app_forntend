@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ProductType } from "@/components/Product/ProductItem.component";
 import { ProductsList } from "@/components/Product/ProductsList.component";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Container = styled.div`
   .summary {
@@ -22,7 +23,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
   type ArrayOfProductsQ = Product[];
   type ArrayOfProducts = ProductType[];
   const { data: session } = useSession();
-  const { cartItems, clearCartItem, shippingAddress, paymentMethod } = useCartStore();
+  const { cartItems, clearCartItem, shippingAddress, paymentMethod, repItem } = useCartStore();
   const [ items, setItems] = useState<ArrayOfProductsQ>();
   const [ productsDB, setProductsDB ] = useState<ArrayOfProducts>();
   const [ address, setAddress ] = useState<any>();
@@ -53,8 +54,19 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
     try {
       const products: any = await Promise.all(items.map( async (item) => {     
         const response = await axios.get(`/api/products/${item.slug}`);
-        return {slug: response.data.slug, availability: response.data.countInStock >= item.quantity ? true : false}
+        return {slug: response.data.slug, availability: response.data.countInStock >= item.quantity ? true : false, countInStock: response.data.countInStock}
       }));
+
+      products.map((product: any) => {
+        if (!product.availability) {
+          const item = items.filter((item) => item.slug === product.slug)[0];
+          console.log('item brbr: ', item)
+          item.quantity = product.countInStock;
+          repItem(item);
+          toast.error(`Brak ${item.name} w magazynie`);
+        }
+      });
+
       return products;
     } catch (err) {
       console.log(err);
@@ -90,6 +102,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
       //toast.error(getError(err));
     }
   };
+  console.log('eeeeeee', items)
   return (
     <>
         <CheckoutWizard activeStep={3}/>
