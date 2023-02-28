@@ -21,11 +21,9 @@ const Container = styled.div`
 const Placeorder: NextPageWithLayout = (): JSX.Element => {
   type Product = ProductType & {quantity: number}
   type ArrayOfProductsQ = Product[];
-  type ArrayOfProducts = ProductType[];
   const { data: session } = useSession();
-  const { cartItems, clearCartItem, shippingAddress, paymentMethod, repItem } = useCartStore();
+  const { cartItems, clearCartItem, shippingAddress, paymentMethod, repItem, remRecordItem } = useCartStore();
   const [ items, setItems] = useState<ArrayOfProductsQ>();
-  const [ productsDB, setProductsDB ] = useState<ArrayOfProducts>();
   const [ address, setAddress ] = useState<any>();
   const [ payment, setPayment ] = useState<string>();
   const [ shipping, setShipping ] = useState<number>(25);
@@ -60,12 +58,20 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
       products.map((product: any) => {
         if (!product.availability) {
           const item = items.filter((item) => item.slug === product.slug)[0];
-          console.log('item brbr: ', item)
           item.quantity = product.countInStock;
-          repItem(item);
+          if (item.quantity === 0) {
+            remRecordItem(item);
+          } else {
+            repItem(item)
+          }
           toast.error(`Brak ${item.name} w magazynie`);
         }
       });
+      const status = products.filter((product: any) => product.availability === false).length > 0 ? false : true;
+
+      if (!status) {
+        return false;
+      }
 
       return products;
     } catch (err) {
@@ -73,36 +79,44 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
     }
   }
 
+  const updateDB = () => {
+    items?.map(async (item) => {
+      //const {data} = await axios.get(`/api/products/${item.slug}`);
+  
+      await axios.put(`/api/products/${item.slug}`, { quantity: item.quantity});
+    });   
+  }
+
   const placeOrderHandler =  async() => {
     const userLogin = session?.user?.login;
     const available =   await checkStock();
-    console.log('available: ', available);
-    try {
-    //   const user = await axios.get(`/api/user/${userLogin}`);
-    //   console.log(user)
-    //   const { data } = await axios.post('/api/orders', {
-    //     products: items?.map((item) => {return `${item.name} ${item.quantity}x ${item.price}PLN`}).join(', '),
-    //     paymentMethod:  payment,
-    //     itemsPrice:     total,
-    //     shippingPrice:  shipping,
-    //     totalPrice:     totalPrice,
-    //     name:           address.location.name,
-    //     surname:        address.location.surname,
-    //     email:          address.location.email,
-    //     address:        address.location.address,
-    //     city:           address.location.city,
-    //     postal:         address.location.postal,
-    //     telephone:      Number(address.location.telephone),
-    //     authorLogin:    user.data.login,
-    //   });
+    if (!available) return;
 
-    //   clearCartItem();
-      // router.push(`/order/${data._id}`);
+    try {
+      const user = await axios.get(`/api/user/${userLogin}`);
+      const {data} = await axios.post('/api/orders', {
+        products: items?.map((item) => {return `${item.name} ${item.quantity}x ${item.price}PLN`}).join(', '),
+        paymentMethod:  payment,
+        itemsPrice:     total,
+        shippingPrice:  shipping,
+        totalPrice:     totalPrice,
+        name:           address.location.name,
+        surname:        address.location.surname,
+        email:          address.location.email,
+        address:        address.location.address,
+        city:           address.location.city,
+        postal:         address.location.postal,
+        telephone:      Number(address.location.telephone),
+        authorLogin:    user.data.login,
+      });
+
+      clearCartItem();
+      toast('Zamówienie zostało złożone');
+      router.push(`/order/${data.id}`);
     } catch (err) {
-      //toast.error(getError(err));
+      toast.error('Wystąpił problem');
     }
   };
-  console.log('eeeeeee', items)
   return (
     <>
         <CheckoutWizard activeStep={3}/>

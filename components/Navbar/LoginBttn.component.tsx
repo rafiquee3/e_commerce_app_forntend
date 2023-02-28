@@ -2,7 +2,6 @@ import Image from 'next/image'
 import styled from "styled-components";
 import Link from 'next/link'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { useUserStore } from '../Store/store';
 import { useSession } from 'next-auth/react';
 import { MenuDropdown } from './MenuDropdown.component';
 
@@ -19,13 +18,14 @@ const Container = styled.div`
   }
 `
 export const LoginBttn: FC = (): JSX.Element => {
+  type Html = any;
   const [showMenu, setShowMenu] = useState(false);
   const { status, data: session } = useSession();
-  const [showStatus, setShowStatus] = useState();
+  const [showStatus, setShowStatus] = useState<Html>();
   const handleOnClick = () => {
     setShowMenu(prev => !prev);
   }
-  const data = useMemo( () => status === 'loading' ? (
+  const data = useMemo(() => status === 'loading' ? (
     'Loading'
   ) : session?.user ? (
     <div className='login' onClick={handleOnClick}>{session.user.login}</div>
@@ -42,8 +42,8 @@ export const LoginBttn: FC = (): JSX.Element => {
 
   useEffect(() => {
    setShowStatus(data);
-},[data])
-  console.log(session)
+  },[data]);
+
   return (
     <Container>
       {showStatus}

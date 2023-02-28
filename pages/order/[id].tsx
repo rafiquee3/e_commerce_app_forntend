@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router';
 import useSWR from "swr";
+import Link from 'next/link';
 
 enum OrderActionKind {
   FETCH_REQUEST = 'FETCH_REQUEST',
@@ -86,6 +87,7 @@ const OrderScreen: NextPageWithLayout = (): JSX.Element => {
       <p>{data.address}</p>
       <p>{data.postal} {data.city}</p>
       <p>Nr tel: {data.telephone}</p>
+      <Link href="/">Kontyuuj zakupy</Link>
     </>
   )
 }
