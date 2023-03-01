@@ -81,8 +81,6 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
 
   const updateDB = () => {
     items?.map(async (item) => {
-      //const {data} = await axios.get(`/api/products/${item.slug}`);
-  
       await axios.put(`/api/products/${item.slug}`, { quantity: item.quantity});
     });   
   }
@@ -110,6 +108,7 @@ const Placeorder: NextPageWithLayout = (): JSX.Element => {
         authorLogin:    user.data.login,
       });
 
+      updateDB();
       clearCartItem();
       toast('Zamówienie zostało złożone');
       router.push(`/order/${data.id}`);

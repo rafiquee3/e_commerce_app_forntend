@@ -10,7 +10,7 @@ export default async function handler(
     const token = await getToken({
         req: req,
         secret: process.env.NEXTAUTH_SECRET,
-      });
+    });
     if (req.method !== 'GET') {
         return;
     }
@@ -18,7 +18,7 @@ export default async function handler(
         const id: number = Number(req.query.id);
         const order = await prisma.order.findUnique({
             where: {
-                id: id,
+                id
             },
         });
 

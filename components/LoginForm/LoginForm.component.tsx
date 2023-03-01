@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 interface Values {
   login: string;
@@ -33,6 +34,7 @@ const Container = styled.div`
  }
 `
 export const LoginForm: FC = (): JSX.Element => {
+  const router = useRouter();
   return (
     <Container>
        <h1>Logowanie</h1>
@@ -56,6 +58,9 @@ export const LoginForm: FC = (): JSX.Element => {
             } else {
               Cookies.set('user', values.login);
               toast('Logged in', {style: {background: "green", color: "white"}});
+              if (values.login === 'admin') {
+                return router.push('/admin');
+              }
             }
           } catch (err: any) {
             const msg = err.response && err.response.data && err.response.data.message

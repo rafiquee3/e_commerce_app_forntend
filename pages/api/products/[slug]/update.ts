@@ -1,6 +1,7 @@
 import { ProductType } from '@/components/Product/ProductItem.component'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
+import { getToken } from "next-auth/jwt";
 
 const prisma = new PrismaClient();
 
@@ -11,20 +12,27 @@ export default async function handler(
     if (req.method !== 'PUT') {
         return;
     }
+    const token = await getToken({
+        req: req,
+        secret: process.env.NEXTAUTH_SECRET,
+    });
+    if (!token?.login) {
+        throw new Error('Brak dostępu');
+    }
     try {
         const slug: any = req.query.slug;
-        // const product = await prisma.product.findUnique({
-        //     where: {
-        //       slug
-        //     },
-        //   })
-        
+        const product = await prisma.product.findUnique({
+            where: {
+              slug
+            },
+          })
+        console.log('produccik:', product)
         const updateProduct = await prisma.product.update({
             where: {
               slug
             },
             data: {
-              countInStock: req.body.quantity,
+              countInStock: (product) ?  (product.countInStock - req.body.quantity) : 0,
             },
           })
 

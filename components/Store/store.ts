@@ -106,7 +106,6 @@ export const useCartStore = create<CartState>((set) => ({
         }
       })
       Cookies.set('cartItems', JSON.stringify(cartItems));
-      console.log('madafaka: ', cartItems)
       return {
         cartItems,
       }

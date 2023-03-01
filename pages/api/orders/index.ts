@@ -1,4 +1,3 @@
-import { ProductType } from '@/components/Product/ProductItem.component'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 
@@ -25,7 +24,6 @@ export default async function handler(
     }
     try {
         const data = req.body;
-        console.log('data: ', data)
         if (!data) {
             throw new Error('Error...');
         }
