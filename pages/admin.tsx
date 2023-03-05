@@ -12,20 +12,17 @@ import { useSession } from "next-auth/react"
 
 const Container = styled.div`
     display: flex;
-    width: 60vw;
-    min-height: 60vh;
+    width: 100%;
+    min-height: 100vh;
     background-color: white;
-    border-radius: 28px;
+    padding: 0px;
 
     .left {
-        width: 30%;
+        width: 20%;
         height: 100%;
-        background-color: #648BB4;
-        border-bottom-left-radius: 28px;
-        border-top-left-radius: 28px;
-
+        background-color: #1C34AB;
+        color: #8995D7;
         ul {
-            margin-top: 35px;
             list-style: none;
         }
         h2 {
@@ -43,13 +40,26 @@ const Container = styled.div`
             }
         }
         li:hover {
-            background-color: #78AFEA;
+            background-color: #1C2FA3;
+        }
+        .adminIcon {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
     }
     .right {
-        width: 70%;
+        width: 80%;
     }
 ` 
+const li_active = {
+    background: '#1C2FA3', 
+    color: '#D4D8EE',
+    borderLeft: '8px solid #23C5D1'
+}
 const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
@@ -67,9 +77,9 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   return (
     <Container>
       <div className="left">
-        <h2>Panel administratora</h2>
+        <div className="adminIcon"><Image src={"/cfg_icon.png"} alt={"config icon"} width={50} height={50}/></div>
         <ul>
-            <li style={path === 'orders' ? {background: '#9CC1EA'} : {}} onClick={() => setPath('orders')}>
+            <li style={path === 'orders' ?  li_active : {}} onClick={() => setPath('orders')}>
                 <Image
                     src="/order_icon.png"
                     alt="Order icon"
@@ -78,7 +88,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
                 />
                 <p>Zamówienia</p>
             </li>
-            <li style={path === 'products' ? {background: '#9CC1EA'} : {}} onClick={() => setPath('products')}> 
+            <li style={path === 'products' ? li_active : {}} onClick={() => setPath('products')}> 
                 <Image
                     src="/product_icon.png"
                     alt="Product icon"
@@ -87,7 +97,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
                 />
                 <p>Produkty</p>
             </li>
-            <li style={path === 'users' ? {background: '#9CC1EA'} : {}} onClick={() => setPath('users')}> 
+            <li style={path === 'users' ? li_active : {}} onClick={() => setPath('users')}> 
                 <Image
                     src="/user_icon.png"
                     alt="User icon"
@@ -107,7 +117,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
 
 Admin.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout title="Cart">
+    <Layout title="Admin">
         <AdminLayout>
             {page}
         </AdminLayout>

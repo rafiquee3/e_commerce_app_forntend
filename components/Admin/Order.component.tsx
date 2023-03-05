@@ -1,34 +1,22 @@
 import styled from "styled-components";
 import { OrderType } from "@/pages/api/orders";
 import Image from "next/image";
+import Link from "next/link";
 
 const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    ul {
-        margin-top: 35px;
-        list-style: none;
-    }
-    h2 {
-        margin-top: 40px;
-        margin-left: 30px;
-    }
-    ul {
-        list-style: none;
-        li {
-            padding: 15px;
-            .id {
-                padding: 15px;
-            }
-        }
-        li:nth-child(odd) {
-            background: #C7C7C7;
-        }
-   }
+    min-height: 100vh;
+    background: #F9FAFD;
 `
 const Table = styled.table`
-    width: 100%;
+    width: 70%;
     border: none;
-    border-spacing : 0;
+    border-spacing : 1;
+    margin-top: 40px;
+    margin-bottom: 40px;
     
     th {
         text-align: center;
@@ -37,10 +25,36 @@ const Table = styled.table`
     }
     td {
         text-align: center;
-        
+        position: relative;
+        img {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
     }
     tr {
-       height: 40px;
+       height: 60px;
+       margin: 5px;
+       background: white;
+
+       .id {
+            padding-left: 10px;
+            padding-right: 10px;
+       }
+       .edit {
+            padding-left: 10px;
+            padding-right: 10px;
+       }
+       .delete {
+            padding-left: 10px;
+            padding-right: 10px;
+       }
+    }
+    tr:hover {
+        border-left: 5px solid black;
     }
     tbody {
         tr:nth-child(even) {
@@ -73,9 +87,9 @@ export const Order = ({orders}: {orders: OrderArr | undefined}): JSX.Element => 
                         <td>{order.name} {order.surname}</td> 
                         <td>{order.email}</td>
                         <td>{order.totalPrice} PLN</td>
-                        <td><Image src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></td>
-                        <td><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15}/></td>
-                    </tr>)).reverse()
+                        <td className="edit"><Link href={`/order/${order.id}`}><Image src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                        <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15}/></td>
+                        </tr>)).reverse()
                 }
             </tbody>
         </Table>

@@ -25,6 +25,9 @@ export default async function handler(
         if (!order) {
             throw new Error('Zamówienie o podanym numerze id nie istnieje');
         }
+        if (token?.login === 'admin') {
+            return res.status(200).json(order);
+        }
         if (order.authorLogin !== token?.login) {
             throw new Error('Brak dostępu');
         }
