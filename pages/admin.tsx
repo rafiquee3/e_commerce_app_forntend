@@ -12,16 +12,21 @@ import { useSession } from "next-auth/react"
 
 const Container = styled.div`
     display: flex;
-    width: 100%;
+    width: 85%;
     min-height: 100vh;
     background-color: white;
     padding: 0px;
+    margin: 40px 0;
+    border-radius: 25px;
 
     .left {
         width: 20%;
         height: 100%;
         background-color: #1C34AB;
         color: #8995D7;
+        border-top-left-radius: 25px;
+        border-bottom-left-radius: 25px;
+
         ul {
             list-style: none;
         }
@@ -41,6 +46,7 @@ const Container = styled.div`
         }
         li:hover {
             background-color: #1C2FA3;
+            border: 3px solid #1C34AB;
         }
         .adminIcon {
             width: 100%;
@@ -53,6 +59,8 @@ const Container = styled.div`
     }
     .right {
         width: 80%;
+        border-top-right-radius: 25px;
+        border-bottom-right-radius: 25px;
     }
 ` 
 const li_active = {
