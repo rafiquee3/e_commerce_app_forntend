@@ -1,0 +1,115 @@
+import styled from "styled-components";
+import { OrderType } from "@/pages/api/orders";
+import Image from "next/image";
+import Link from "next/link";
+import { ProductType } from "../Product/ProductItem.component";
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    background: #F9FAFD;
+    border-bottom-right-radius: 25px;
+
+    #search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 70px;
+        background: white;
+        border-top-right-radius: 25px;
+    }
+`
+const Table = styled.table`
+    width: 70%;
+    border-spacing : 1;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    
+    th {
+        text-align: center;
+        background: #F9FAFD;
+        color: black;
+    }
+    td {
+        text-align: center;
+        position: relative;
+        a {
+            width: 200px;
+            background: red;
+        }
+        img {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+    }
+    tr {
+       height: 60px;
+       margin: 5px;
+       background: white;
+
+       .id {
+            padding-left: 10px;
+            padding-right: 10px;
+       }
+       .edit {
+            padding-left: 10px;
+            padding-right: 10px;
+       }
+       .delete {
+            padding-left: 10px;
+            padding-right: 10px;
+       }
+    }
+    thead tr:first-child {
+        height: 40px;
+    }
+    tr:hover {
+        border-left: 5px solid black;
+    }
+    tbody {
+        tr:nth-child(even) {
+            background: #DEDEDE;
+        }
+    }
+    .item {
+        text-align: left;
+    }
+`
+export const Product = ({products}: {products: ProductType[] | undefined}): JSX.Element => {
+    return (
+    <Container>     
+        <Table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nazwa</th>
+                    <th>Marka</th>
+                    <th>Cena</th>
+                    <th>Edytuj</th>
+                    <th>Usuń</th>
+                </tr>
+            </thead>
+            <tbody>
+                {products?.map((product: ProductType) => (
+                    <tr key={product.name}>
+                        <td className="id"><Image src={product.image} width={40} height={40} alt={"product img"}></Image></td> 
+                        <td>{product.name}</td> 
+                        <td>{product.brand}</td>
+                        <td>{product.price} PLN</td>
+                        <td className="edit"><Link href={`/order/${product.slug}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                        <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15}/></td>
+                    </tr>)).reverse()
+                }
+            </tbody>
+        </Table>
+    </Container>
+  );
+}

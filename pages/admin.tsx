@@ -10,11 +10,14 @@ import { Order } from "@/components/Admin/Order.component";
 import Image from "next/image";
 import { useSession } from "next-auth/react"
 import { useRef } from "react";
+import { ProductType } from "@/components/Product/ProductItem.component";
+import { Product } from "@/components/Admin/Product.component";
 
 const Container = styled.div`
     display: flex;
-    width: 85%;
+    min-width: 950px;
     min-height: 100vh;
+    width: 85%;
     background-color: white;
     padding: 0px;
     margin: 40px 0;
@@ -101,16 +104,25 @@ const li_active = {
 const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
+  const [products, setProducts] = useState<ProductType[]>();
+  const [search, setSearch] = useState<any>();
   const [path, setPath] = useState<String>('orders');
   const { data: session, status } = useSession();
   const inputRef = useRef<any>();
+  let element;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = inputRef.current.value;
-    const reg = `/.${searchValue}/`;
-    console.log("Search: " + text1.search(reg)); //14
+    const reg = new RegExp(`${searchValue}`,"gi");
+
     if (path === 'orders') {
-        
+        const result = orders?.filter((order) => {
+            const data = `${order.id} ${order.name} ${order.surname} ${order.email} ${order.telephone}`;
+            const result = data.search(reg);
+
+            return result >= 0 ? true : false; 
+        });
+        setSearch(result);
     }
   };
 
@@ -118,10 +130,33 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
 
+   axios.get(`http://localhost:3000/api/products/getAllProducts`)
+   .then((res) => setProducts(res.data));
+
   }, [cartItems]);
+
   if (!session?.user.isAdmin) {
     return <p>Dostęp tylko dla administratora</p>
   }
+
+  if (search) {
+    if (path === 'orders') {
+        element = <Order orders={search}/>;
+    } else if (path === 'products') {
+        element = <Product products={products}/>
+    } else if (path === 'users') {
+
+    }
+  } else {
+    if (path === 'orders') {
+        element = <Order orders={orders}/>;
+    } else if (path === 'products') {
+        element = <Product products={products}/>
+    } else if (path === 'users') {
+
+    }
+  }
+  console.log('products::', products)
   return (
     <Container>
       <div className="left">
@@ -158,12 +193,11 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
       </div>
       <div className="right">
         <div id="search"><div className="searchIcon"><Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/><input type="text" ref={inputRef} onChange={handleSearch}></input></div></div>
-        { path === 'orders' ? <Order orders={orders}/> : 'cos'}
+       {element}
       </div>
     </Container>
   );
 }
-
 Admin.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout title="Admin">
