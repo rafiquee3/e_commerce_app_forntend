@@ -9,6 +9,7 @@ import { AdminLayout } from "@/components/Layout/AdminLayout.component";
 import { Order } from "@/components/Admin/Order.component";
 import Image from "next/image";
 import { useSession } from "next-auth/react"
+import { useRef } from "react";
 
 const Container = styled.div`
     display: flex;
@@ -46,7 +47,6 @@ const Container = styled.div`
         }
         li:hover {
             background-color: #1C2FA3;
-            border: 3px solid #1C34AB;
         }
         .adminIcon {
             width: 100%;
@@ -61,6 +61,36 @@ const Container = styled.div`
         width: 80%;
         border-top-right-radius: 25px;
         border-bottom-right-radius: 25px;
+
+        #search {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 70px;
+            
+            .searchIcon {
+            display: flex;
+            width: 400px;   
+            border-radius: 12px;
+            background: #23C5D1;
+            align-items: center;
+
+                img {
+                    margin: 7px;
+                }
+                input {
+                    border: none;
+                    width: 100%;
+                    height: 40px;
+                    background: #F9FAFD;
+                    border-top-right-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                    padding: 0 10px;
+                    outline: none;
+                }
+            }
+        }
     }
 ` 
 const li_active = {
@@ -73,6 +103,16 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
   const [path, setPath] = useState<String>('orders');
   const { data: session, status } = useSession();
+  const inputRef = useRef<any>();
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = inputRef.current.value;
+    const reg = `/.${searchValue}/`;
+    console.log("Search: " + text1.search(reg)); //14
+    if (path === 'orders') {
+        
+    }
+  };
 
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
@@ -117,6 +157,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         </ul>
       </div>
       <div className="right">
+        <div id="search"><div className="searchIcon"><Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/><input type="text" ref={inputRef} onChange={handleSearch}></input></div></div>
         { path === 'orders' ? <Order orders={orders}/> : 'cos'}
       </div>
     </Container>
