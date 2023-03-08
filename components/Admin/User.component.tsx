@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { OrderType } from "@/pages/api/orders";
 import Image from "next/image";
 import Link from "next/link";
+import { ProductType } from "../Product/ProductItem.component";
 
 const Container = styled.div`
     display: flex;
@@ -76,37 +77,36 @@ const Table = styled.table`
         text-align: left;
     }
 `
-type OrderArr = (OrderType & {id: number})[];
-export const Order = ({orders}: {orders: OrderArr | undefined}): JSX.Element => {
-  return (
-    <Container>    
-        { orders?.length ?  
-        <Table>
+export const User = ({users}: {users: any}): JSX.Element => {
+    return (
+    <Container>
+        { users.length ?      
+        <Table>           
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Odbiorca</th>
+                    <th>Imię i nazwisko</th>
+                    <th>Login</th>
                     <th>Email</th>
-                    <th>Total</th>
                     <th>Edytuj</th>
                     <th>Usuń</th>
                 </tr>
             </thead>
             <tbody>
-                {orders?.map((order: OrderType & {id: number}) => (
-                    <tr key={order.id}>
-                        <td className="id">{order.id} </td> 
-                        <td>{order.name} {order.surname}</td> 
-                        <td>{order.email}</td>
-                        <td>{order.totalPrice} PLN</td>
-                        <td className="edit"><Link href={`/order/${order.id}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                {users?.map((user: any) => (
+                    <tr key={user.id}>
+                        <td className="id">{user.id}</td> 
+                        <td>{user.name} {user.surname}</td> 
+                        <td>{user.login}</td>
+                        <td>{user.email}</td>
+                        <td className="edit"><Link href={`/order/${user.name}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
                         <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15}/></td>
-                        </tr>)).reverse()
+                    </tr>)).reverse()
                 }
             </tbody>
-        </Table> 
+        </Table>
         :
-        <div className="error">Brak szukanego zamówienia</div>
+        <div className="error">Brak szukanego użytkownika</div>
         }
     </Container>
   );

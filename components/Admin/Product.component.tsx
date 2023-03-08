@@ -13,14 +13,8 @@ const Container = styled.div`
     background: #F9FAFD;
     border-bottom-right-radius: 25px;
 
-    #search {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 70px;
-        background: white;
-        border-top-right-radius: 25px;
+    .error {
+        margin: 30px;
     }
 `
 const Table = styled.table`
@@ -85,7 +79,8 @@ const Table = styled.table`
 `
 export const Product = ({products}: {products: ProductType[] | undefined}): JSX.Element => {
     return (
-    <Container>     
+    <Container>    
+        {products?.length ? 
         <Table>
             <thead>
                 <tr>
@@ -110,6 +105,9 @@ export const Product = ({products}: {products: ProductType[] | undefined}): JSX.
                 }
             </tbody>
         </Table>
+        :
+        <div className="error">Brak szukanego produktu</div>
+        }
     </Container>
   );
 }

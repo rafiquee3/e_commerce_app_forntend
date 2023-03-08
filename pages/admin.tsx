@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react"
 import { useRef } from "react";
 import { ProductType } from "@/components/Product/ProductItem.component";
 import { Product } from "@/components/Admin/Product.component";
+import { User } from "@/components/Admin/User.component";
 
 const Container = styled.div`
     display: flex;
@@ -106,11 +107,10 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
   const [products, setProducts] = useState<ProductType[]>();
   const [users, setUsers] = useState<any>();
-  const [input, setInput] = useState<any>();
+  const [input, setInput] = useState<any>('');
   const [search, setSearch] = useState<any>();
   const [path, setPath] = useState<String>('orders');
   const { data: session, status } = useSession();
-  const inputRef = useRef<any>();
   let element;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,8 +138,8 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         setSearch(result);
     }
     else if (path === 'users') {
-        const result = products?.filter((product) => {
-            const data = `${product.name} ${product.brand} ${product.price}`;
+        const result = users?.filter((user) => {
+            const data = `${user.name} ${user.surname} ${user.login} ${user.email}`;
             const result = data.search(reg);
 
             return result >= 0 ? true : false; 
@@ -171,7 +171,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else if (path === 'products') {
         element = <Product products={search}/>
     } else if (path === 'users') {
-
+        element = <User users={search}/>
     }
   } else {
     if (path === 'orders') {
@@ -179,7 +179,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else if (path === 'products') {
         element = <Product products={products}/>
     } else if (path === 'users') {
-
+        element = <User users={users}/>
     }
   }
   console.log('products::', users)
