@@ -105,6 +105,8 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
   const [products, setProducts] = useState<ProductType[]>();
+  const [users, setUsers] = useState<any>();
+  const [input, setInput] = useState<any>();
   const [search, setSearch] = useState<any>();
   const [path, setPath] = useState<String>('orders');
   const { data: session, status } = useSession();
@@ -112,7 +114,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   let element;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = inputRef.current.value;
+    const searchValue = e.target.value;
     const reg = new RegExp(`${searchValue}`,"gi");
 
     if (path === 'orders') {
@@ -122,6 +124,27 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
 
             return result >= 0 ? true : false; 
         });
+        setInput(searchValue);
+        setSearch(result);
+    }
+    else if (path === 'products') {
+        const result = products?.filter((product) => {
+            const data = `${product.name} ${product.brand} ${product.price}`;
+            const result = data.search(reg);
+
+            return result >= 0 ? true : false; 
+        });
+        setInput(searchValue);
+        setSearch(result);
+    }
+    else if (path === 'users') {
+        const result = products?.filter((product) => {
+            const data = `${product.name} ${product.brand} ${product.price}`;
+            const result = data.search(reg);
+
+            return result >= 0 ? true : false; 
+        });
+        setInput(searchValue);
         setSearch(result);
     }
   };
@@ -133,6 +156,9 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
    axios.get(`http://localhost:3000/api/products/getAllProducts`)
    .then((res) => setProducts(res.data));
 
+   axios.get(`http://localhost:3000/api/user/getAllUsers`)
+   .then((res) => setUsers(res.data));
+
   }, [cartItems]);
 
   if (!session?.user.isAdmin) {
@@ -143,7 +169,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <Order orders={search}/>;
     } else if (path === 'products') {
-        element = <Product products={products}/>
+        element = <Product products={search}/>
     } else if (path === 'users') {
 
     }
@@ -156,13 +182,13 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
 
     }
   }
-  console.log('products::', products)
+  console.log('products::', users)
   return (
     <Container>
       <div className="left">
         <div className="adminIcon"><Image src={"/cfg_icon.png"} alt={"config icon"} width={50} height={50}/></div>
         <ul>
-            <li style={path === 'orders' ?  li_active : {}} onClick={() => setPath('orders')}>
+            <li style={path === 'orders' ?  li_active : {}} onClick={() => {setInput(''); setSearch(null); setPath('orders')}}>
                 <Image
                     src="/order_icon.png"
                     alt="Order icon"
@@ -171,7 +197,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
                 />
                 <p>Zamówienia</p>
             </li>
-            <li style={path === 'products' ? li_active : {}} onClick={() => setPath('products')}> 
+            <li style={path === 'products' ? li_active : {}} onClick={() => {setInput(''); setSearch(null); setPath('products')}}> 
                 <Image
                     src="/product_icon.png"
                     alt="Product icon"
@@ -180,7 +206,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
                 />
                 <p>Produkty</p>
             </li>
-            <li style={path === 'users' ? li_active : {}} onClick={() => setPath('users')}> 
+            <li style={path === 'users' ? li_active : {}} onClick={() => {setInput(''); setSearch(null); setPath('users')}}> 
                 <Image
                     src="/user_icon.png"
                     alt="User icon"
@@ -192,7 +218,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         </ul>
       </div>
       <div className="right">
-        <div id="search"><div className="searchIcon"><Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/><input type="text" ref={inputRef} onChange={handleSearch}></input></div></div>
+        <div id="search"><div className="searchIcon"><Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/><input type="text" value={input} onChange={handleSearch}></input></div></div>
        {element}
       </div>
     </Container>
