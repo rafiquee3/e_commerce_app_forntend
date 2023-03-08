@@ -9,10 +9,9 @@ import { AdminLayout } from "@/components/Layout/AdminLayout.component";
 import { Order } from "@/components/Admin/Order.component";
 import Image from "next/image";
 import { useSession } from "next-auth/react"
-import { useRef } from "react";
 import { ProductType } from "@/components/Product/ProductItem.component";
 import { Product } from "@/components/Admin/Product.component";
-import { User } from "@/components/Admin/User.component";
+import { PaginatedItems } from "@/components/Admin/List.component";
 
 const Container = styled.div`
     display: flex;
@@ -102,7 +101,7 @@ const li_active = {
     color: '#D4D8EE',
     borderLeft: '8px solid #23C5D1'
 }
-const Admin: NextPageWithLayout = (): JSX.Element => {
+const Admin = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
   const [products, setProducts] = useState<ProductType[]>();
@@ -167,19 +166,19 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
 
   if (search) {
     if (path === 'orders') {
-        element = <Order orders={search}/>;
+        element = <PaginatedItems itemsPerPage={8} items={search} path="orders"/>
     } else if (path === 'products') {
-        element = <Product products={search}/>
+        element = <PaginatedItems itemsPerPage={8} items={search} path="products"/>
     } else if (path === 'users') {
-        element = <User users={search}/>
+        element = <PaginatedItems itemsPerPage={8} items={search} path="users"/>
     }
   } else {
     if (path === 'orders') {
-        element = <Order orders={orders}/>;
+        element = <PaginatedItems itemsPerPage={8} items={orders} path="orders"/>
     } else if (path === 'products') {
-        element = <Product products={products}/>
+        element = <PaginatedItems itemsPerPage={8} items={products} path="products"/>
     } else if (path === 'users') {
-        element = <User users={users}/>
+        element = <PaginatedItems itemsPerPage={2} items={users} path="users"/>
     }
   }
   console.log('products::', users)

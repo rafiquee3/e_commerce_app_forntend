@@ -14,3 +14,44 @@ a {
   text-decoration: none;
 }
 
+.pagination {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+  line-height: 40px;
+  color: #3872AD;
+  cursor: pointer;
+}   
+.pagination a {
+  display: block;
+      width: 100%;
+      height: 100%;
+}
+.pagination li {
+  width: 35px;
+  height: 100%;
+  border: 1px solid #D1D6DB;
+  border-right: none;
+}
+.pagination .previous {
+  width: 35px;
+  height: 40px;
+  border: 1px solid #D1D6DB;
+  border-right: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.pagination .next {
+  width: 35px;
+  height: 40px;
+  border: 1px solid #D1D6DB;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.pagination .active {
+  background: #3872AD;
+  color: white;
+}
