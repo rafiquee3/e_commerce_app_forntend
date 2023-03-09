@@ -24,6 +24,7 @@ a {
   line-height: 40px;
   color: #3872AD;
   cursor: pointer;
+  margin-bottom: 15px;
 }   
 .pagination a {
   display: block;

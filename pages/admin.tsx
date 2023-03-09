@@ -6,12 +6,12 @@ import { useCartStore } from '@/components/Store/store'
 import axios from 'axios';
 import { OrderType } from "./api/orders";
 import { AdminLayout } from "@/components/Layout/AdminLayout.component";
-import { Order } from "@/components/Admin/Order.component";
+import { Order, PaginatedOrders } from "@/components/Admin/Order.component";
 import Image from "next/image";
 import { useSession } from "next-auth/react"
 import { ProductType } from "@/components/Product/ProductItem.component";
-import { Product } from "@/components/Admin/Product.component";
-import { PaginatedItems } from "@/components/Admin/List.component";
+import { PaginatedProducts, Product } from "@/components/Admin/Product.component";
+import { PaginatedItems, PaginatedUsers } from "@/components/Admin/User.component";
 
 const Container = styled.div`
     display: flex;
@@ -161,27 +161,27 @@ const Admin = (): JSX.Element => {
   }, [cartItems]);
 
   if (!session?.user.isAdmin) {
-    return <p>Dostęp tylko dla administratora</p>
+    return <p style={{margin: "30px"}}>Dostęp tylko dla administratora</p>
   }
 
   if (search) {
     if (path === 'orders') {
-        element = <PaginatedItems itemsPerPage={8} items={search} path="orders"/>
+        element = <PaginatedOrders itemsPerPage={8} items={search}/>
     } else if (path === 'products') {
-        element = <PaginatedItems itemsPerPage={8} items={search} path="products"/>
+        element = <PaginatedProducts itemsPerPage={8} items={search}/>
     } else if (path === 'users') {
-        element = <PaginatedItems itemsPerPage={8} items={search} path="users"/>
+        element = <PaginatedUsers itemsPerPage={8} items={search}/>;
     }
   } else {
     if (path === 'orders') {
-        element = <PaginatedItems itemsPerPage={8} items={orders} path="orders"/>
+        element = <PaginatedOrders itemsPerPage={8} items={orders}/>
     } else if (path === 'products') {
-        element = <PaginatedItems itemsPerPage={8} items={products} path="products"/>
+        element = <PaginatedProducts itemsPerPage={8} items={products}/>
     } else if (path === 'users') {
-        element = <PaginatedItems itemsPerPage={2} items={users} path="users"/>
+        element = <PaginatedUsers itemsPerPage={8} items={users}/>;
     }
   }
-  console.log('products::', users)
+  console.log('products::', orders)
   return (
     <Container>
       <div className="left">

@@ -1,46 +1,45 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ProductType } from "../Product/ProductItem.component";
-import { Container, Table } from "../../styles/table";
 import ReactPaginate from 'react-paginate';
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Container, Table } from "../../styles/table"
 
-const Product = ({products}: {products: ProductType[] | undefined}): JSX.Element => {
+const User = ({users}: {users: any}): JSX.Element => {
     return (
-    <Container>    
-        {products?.length ? 
-        <Table>
+    <Container>
+        { users?.length ?      
+        <Table>           
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Nazwa</th>
-                    <th>Marka</th>
-                    <th>Cena</th>
+                    <th>Id</th>
+                    <th>Imię i nazwisko</th>
+                    <th>Login</th>
+                    <th>Email</th>
                     <th>Edytuj</th>
                     <th>Usuń</th>
                 </tr>
             </thead>
             <tbody>
-                {products?.map((product: ProductType) => (
-                    <tr key={product.name}>
-                        <td className="id"><Image src={product.image} width={40} height={40} alt={"product img"}></Image></td> 
-                        <td>{product.name}</td> 
-                        <td>{product.brand}</td>
-                        <td>{product.price} PLN</td>
-                        <td className="edit"><Link href={`/order/${product.slug}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                {users?.map((user: any) => (
+                    <tr key={user.id}>
+                        <td className="id">{user.id}</td> 
+                        <td>{user.name} {user.surname}</td> 
+                        <td>{user.login}</td>
+                        <td>{user.email}</td>
+                        <td className="edit"><Link href={`/order/${user.name}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
                         <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15}/></td>
                     </tr>)).reverse()
                 }
             </tbody>
         </Table>
         :
-        <div className="error">Brak szukanego produktu</div>
+        <div className="error">Brak szukanego użytkownika</div>
         }
     </Container>
   );
 }
 
-export const PaginatedProducts = ({itemsPerPage, items}) => {
+export const PaginatedUsers = ({itemsPerPage, items}) => {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
     console.log(`Loading items from ${itemOffset} to ${endOffset}`);
@@ -49,11 +48,12 @@ export const PaginatedProducts = ({itemsPerPage, items}) => {
   
     const handlePageClick = (event) => {
       const newOffset = (event.selected * itemsPerPage) % items.length;
+      console.log(
+        `User requested page number ${event.selected}, which is offset ${newOffset}`
+      );
       setItemOffset(newOffset);
     };
-    useEffect(() => {
-        setItemOffset(0)
-    }, [items]);
+  
     return (
           <>
               <ReactPaginate
@@ -71,7 +71,9 @@ export const PaginatedProducts = ({itemsPerPage, items}) => {
                   previousClassName="previous"
                   nextClassName="next"          
               />
-              <Product products={currentItems} />   
+              <User users={currentItems} />   
           </>
     );
-}
+  }
+
+

@@ -2,80 +2,10 @@ import styled from "styled-components";
 import { OrderType } from "@/pages/api/orders";
 import Image from "next/image";
 import Link from "next/link";
+import ReactPaginate from 'react-paginate';
+import { useEffect, useState } from "react";
+import { Container, Table } from "@/styles/table";
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    min-height: 100vh;
-    background: #F9FAFD;
-    border-bottom-right-radius: 25px;
-
-    .error {
-        margin: 30px;
-    }
-`
-const Table = styled.table`
-    width: 70%;
-    border-spacing : 1;
-    margin-top: 40px;
-    margin-bottom: 40px;
-    
-    th {
-        text-align: center;
-        background: #F9FAFD;
-        color: black;
-    }
-    td {
-        text-align: center;
-        position: relative;
-        a {
-            width: 200px;
-            background: red;
-        }
-        img {
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-    }
-    tr {
-       height: 60px;
-       margin: 5px;
-       background: white;
-
-       .id {
-            padding-left: 10px;
-            padding-right: 10px;
-       }
-       .edit {
-            padding-left: 10px;
-            padding-right: 10px;
-       }
-       .delete {
-            padding-left: 10px;
-            padding-right: 10px;
-       }
-    }
-    thead tr:first-child {
-        height: 40px;
-    }
-    tr:hover {
-        border-left: 5px solid black;
-    }
-    tbody {
-        tr:nth-child(even) {
-            background: #DEDEDE;
-        }
-    }
-    .item {
-        text-align: left;
-    }
-`
 type OrderArr = (OrderType & {id: number})[];
 export const Order = ({orders}: {orders: OrderArr | undefined}): JSX.Element => {
   return (
@@ -110,4 +40,40 @@ export const Order = ({orders}: {orders: OrderArr | undefined}): JSX.Element => 
         }
     </Container>
   );
+}
+export const PaginatedOrders = ({itemsPerPage, items}) => {
+    const [itemOffset, setItemOffset] = useState(0);
+    const endOffset = itemOffset + itemsPerPage;
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    const currentItems = items?.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(items?.length / itemsPerPage);
+  
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % items.length;
+      setItemOffset(newOffset);
+    };
+
+    useEffect(() => {
+        setItemOffset(0)
+    }, [items]);
+    return (
+        <>
+            <ReactPaginate
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="<"
+                className="pagination"
+                containerClassName="container"
+                pageClassName="li"
+                pageLinkClassName="link"
+                activeClassName="active"
+                previousClassName="previous"
+                nextClassName="next"          
+            />
+            <Order orders={currentItems} />   
+        </>
+    );
 }
