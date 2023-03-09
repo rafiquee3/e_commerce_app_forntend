@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import ReactPaginate from 'react-paginate';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Table } from "../../styles/table"
+import { UserType } from "@/helpers/types";
 
 const User = ({users}: {users: any}): JSX.Element => {
     return (
@@ -39,21 +40,23 @@ const User = ({users}: {users: any}): JSX.Element => {
   );
 }
 
-export const PaginatedUsers = ({itemsPerPage, items}) => {
+export const PaginatedUsers = ({itemsPerPage, items}: {itemsPerPage: number, items: UserType[] | any}) => {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
     console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     const currentItems = items?.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(items?.length / itemsPerPage);
   
-    const handlePageClick = (event) => {
+    const handlePageClick = (event: React.SyntheticEvent & {selected: number}) => {
       const newOffset = (event.selected * itemsPerPage) % items.length;
       console.log(
         `User requested page number ${event.selected}, which is offset ${newOffset}`
       );
       setItemOffset(newOffset);
     };
-  
+    useEffect(() => {
+        setItemOffset(0)
+    }, [items]);
     return (
           <>
               <ReactPaginate
