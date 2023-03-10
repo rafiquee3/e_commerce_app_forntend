@@ -2,10 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
     display: flex;
-    min-width: 950px;
-    min-height: 100vh;
     width: 85%;
-    background-color: white;
+    height: 880px;
+    background-color: #F9FAFD;
     padding: 0px;
     margin: 40px 0;
     border-radius: 25px;
@@ -55,6 +54,7 @@ export const Container = styled.div`
             color: #D4D8EE;
         }
     }
+
     .right {
         width: 80%;
         border-top-right-radius: 25px;
@@ -66,6 +66,8 @@ export const Container = styled.div`
             align-items: center;
             width: 100%;
             height: 70px;
+            background: white;
+            border-top-right-radius: 25px;
             
             .searchIcon {
             display: flex;

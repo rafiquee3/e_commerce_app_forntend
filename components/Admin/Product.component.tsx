@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductType } from "../Product/ProductItem.component";
 import { Container, Table } from "../../styles/table";
-import ReactPaginate from 'react-paginate';
+import Pagination from "rc-pagination";
 import { useEffect, useState } from "react";
 
 const Product = ({products}: {products: ProductType[] | undefined}): JSX.Element => {
@@ -41,37 +41,30 @@ const Product = ({products}: {products: ProductType[] | undefined}): JSX.Element
 }
 
 export const PaginatedProducts = ({itemsPerPage, items}: {itemsPerPage: number, items: ProductType[] | any}) => {
-    const [itemOffset, setItemOffset] = useState(0);
-    const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    const currentItems = items?.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(items?.length / itemsPerPage);
-  
-    const handlePageClick = (event: React.SyntheticEvent & {selected: number}) => {
-      const newOffset = (event.selected * itemsPerPage) % items.length;
-      setItemOffset(newOffset);
-    };
+    const countPerPage = 10;
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [collection, setCollection] = useState(items?.slice(0, countPerPage));
+
+    const updatePage = (p: any) => {
+        setCurrentPage(p);
+        const to = countPerPage * p;
+        const from = to - countPerPage;
+        setCollection(items?.slice(from, to));
+    }
+
     useEffect(() => {
-        setItemOffset(0);
+        setCollection(items?.slice(0, countPerPage));
+        setCurrentPage(1);
     }, [items]);
     return (
-          <>
-              <ReactPaginate
-                  breakLabel="..."
-                  nextLabel=">"
-                  onPageChange={handlePageClick}
-                  pageRangeDisplayed={5}
-                  pageCount={pageCount}
-                  previousLabel="<"
-                  className="pagination"
-                  containerClassName="container"
-                  pageClassName="li"
-                  pageLinkClassName="link"
-                  activeClassName="active"
-                  previousClassName="previous"
-                  nextClassName="next"          
-              />
-              <Product products={currentItems} />   
-          </>
+        <>          
+            <Product products={collection} />
+            <Pagination
+                pageSize={countPerPage}
+                onChange={updatePage}
+                current={currentPage}
+                total={items?.length}
+            />
+        </>
     );
 }

@@ -5,9 +5,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 100vh;
     background: #F9FAFD;
-    border-bottom-right-radius: 25px;
 
     .error {
         margin: 30px;
@@ -56,6 +54,7 @@ export const Table = styled.table`
        .delete {
             padding-left: 10px;
             padding-right: 10px;
+            cursor: pointer;
        }
     }
     thead tr:first-child {
