@@ -1,10 +1,11 @@
-import styled from "styled-components";
 import { OrderType } from "@/pages/api/orders";
 import Image from "next/image";
 import Link from "next/link";
 import ReactPaginate from 'react-paginate';
+import Pagination from "rc-pagination";
 import { useEffect, useState } from "react";
 import { Container, Table } from "@/styles/table";
+import "rc-pagination/assets/index.css";
 
 type OrderArr = (OrderType & {id: number})[];
 export const Order = ({orders}: {orders: OrderArr | undefined}): JSX.Element => {
@@ -42,38 +43,43 @@ export const Order = ({orders}: {orders: OrderArr | undefined}): JSX.Element => 
   );
 }
 export const PaginatedOrders = ({itemsPerPage, items}: {itemsPerPage: number, items: (OrderType & {id: number})[] | any}) => {
-    const [itemOffset, setItemOffset] = useState(0);
-    const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    const currentItems = items?.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(items?.length / itemsPerPage);
+    // const [itemOffset, setItemOffset] = useState(0);
+    // const endOffset = itemOffset + itemsPerPage;
+    // console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    // const currentItems = items?.slice(itemOffset, endOffset);
+    // const pageCount = Math.ceil(items?.length / itemsPerPage);
   
-    const handlePageClick = (event: React.SyntheticEvent & {selected: number}) => {
-      const newOffset = (event.selected * itemsPerPage) % items.length;
-      setItemOffset(newOffset);
-    };
+    // const handlePageClick = (event: React.SyntheticEvent & {selected: number}) => {
+    //   const newOffset = (event.selected * itemsPerPage) % items.length;
+    //   setItemOffset(newOffset);
+    // };
 
+    // useEffect(() => {
+    //     setItemOffset(0)
+    // }, [items]);
+    const countPerPage = 10;
+    //const [value, setValue] = React.useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [collection, setCollection] = useState(items?.slice(0, countPerPage));
+    const updatePage = (p) => {
+        setCurrentPage(p);
+        const to = countPerPage * p;
+        const from = to - countPerPage;
+        setCollection(items?.slice(from, to));
+    }
     useEffect(() => {
-        setItemOffset(0)
+        setCollection(items?.slice(0, countPerPage));
+        setCurrentPage(1);
     }, [items]);
     return (
-        <>
-            <ReactPaginate
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
-                pageCount={pageCount}
-                previousLabel="<"
-                className="pagination"
-                containerClassName="container"
-                pageClassName="li"
-                pageLinkClassName="link"
-                activeClassName="active"
-                previousClassName="previous"
-                nextClassName="next"          
+        <>          
+            <Order orders={collection} />
+            <Pagination
+                pageSize={countPerPage}
+                onChange={updatePage}
+                current={currentPage}
+                total={items?.length}
             />
-            <Order orders={currentItems} />   
         </>
     );
 }
