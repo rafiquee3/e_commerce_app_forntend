@@ -65,6 +65,15 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     setSearch(null); 
     setPath(path);
   }
+  const deleteOrder = (orderId: number) => {
+    axios.get(`http://localhost:3000/api/orders/${orderId}/delete`);
+    const result = orders?.filter(order => order.id !== orderId);
+    if (search) {
+        setSearch(result);
+    } else {
+        setOrders(result);
+    }
+  }
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
@@ -83,7 +92,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
 
   if (search) {
     if (path === 'orders') {
-        element = <PaginatedOrders itemsPerPage={8} items={search}/>
+        element = <PaginatedOrders deleteOrder={deleteOrder} items={search}/>
     } else if (path === 'products') {
         element = <PaginatedProducts itemsPerPage={8} items={search}/>
     } else if (path === 'users') {
@@ -91,14 +100,14 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     }
   } else {
     if (path === 'orders') {
-        element = <PaginatedOrders itemsPerPage={8} items={orders}/>
+        element = <PaginatedOrders deleteOrder={deleteOrder} items={orders}/>
     } else if (path === 'products') {
         element = <PaginatedProducts itemsPerPage={8} items={products}/>
     } else if (path === 'users') {
         element = <PaginatedUsers itemsPerPage={8} items={users}/>;
     }
   }
-  console.log('products::', users)
+
   return (
     <Container>
       <div className="left">
@@ -138,7 +147,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
       </div>
       <div className="right">
         <div id="search"><div className="searchIcon"><Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/><input type="text" value={input} onChange={handleSearch}></input></div></div>
-       {element}
+        {element}
       </div>
     </Container>
   );
