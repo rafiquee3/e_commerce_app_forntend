@@ -5,46 +5,45 @@ import { useEffect, useState } from "react";
 import { Container, Table } from "../../styles/table"
 import { UserType } from "@/helpers/types";
 
-const User = ({users}: {users: any}): JSX.Element => {
-    return (
-    <Container>
-        { users?.length ?      
-        <Table>           
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Imię i nazwisko</th>
-                    <th>Login</th>
-                    <th>Email</th>
-                    <th>Edytuj</th>
-                    <th>Usuń</th>
-                </tr>
-            </thead>
-            <tbody>
-                {users?.map((user: any) => (
-                    <tr key={user.id}>
-                        <td className="id">{user.id}</td> 
-                        <td>{user.name} {user.surname}</td> 
-                        <td>{user.login}</td>
-                        <td>{user.email}</td>
-                        <td className="edit"><Link href={`/order/${user.name}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
-                        <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15}/></td>
-                    </tr>)).reverse()
-                }
-            </tbody>
-        </Table>
-        :
-        <div className="error">Brak szukanego użytkownika</div>
-        }
-    </Container>
-  );
-}
-
-export const PaginatedUsers = ({itemsPerPage, items}: {itemsPerPage: number, items: UserType[] | any}) => {
+export const PaginatedUsers = ({items, deleteUser}: {items: UserType[] | any, deleteUser: (login: string) => void}) => {
     const countPerPage = 10;
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [collection, setCollection] = useState(items?.slice(0, countPerPage));
 
+    const User = (): JSX.Element => {
+        return (
+        <Container>
+            {collection?.length ?      
+            <Table>           
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Imię i nazwisko</th>
+                        <th>Login</th>
+                        <th>Email</th>
+                        <th>Edytuj</th>
+                        <th>Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {collection?.map((user: any) => (
+                        <tr key={user.id}>
+                            <td className="id">{user.id}</td> 
+                            <td>{user.name} {user.surname}</td> 
+                            <td>{user.login}</td>
+                            <td>{user.email}</td>
+                            <td className="edit"><Link href={`/order/${user.name}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                            <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15} onClick={() => deleteUser(user.login)}/></td>
+                        </tr>)).reverse()
+                    }
+                </tbody>
+            </Table>
+            :
+            <div className="error">Brak szukanego użytkownika</div>
+            }
+        </Container>
+      );
+    }
     const updatePage = (p: any) => {
         setCurrentPage(p);
         const to = countPerPage * p;
@@ -58,7 +57,7 @@ export const PaginatedUsers = ({itemsPerPage, items}: {itemsPerPage: number, ite
     }, [items]);
     return (
         <>          
-            <User users={collection} />
+            <User/>
             <Pagination
                 pageSize={countPerPage}
                 onChange={updatePage}

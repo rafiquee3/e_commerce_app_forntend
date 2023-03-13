@@ -83,6 +83,15 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         setProducts(result);
     }
   };
+  const deleteUser = (login: string) => {
+    axios.get(`http://localhost:3000/api/user/${login}/delete`);
+    const result = users?.filter(user => user.login !== login);
+    if (search) {
+        setSearch(result);
+    } else {
+        setUsers(result);
+    }
+  }
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
@@ -105,7 +114,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else if (path === 'products') {
         element = <PaginatedProducts deleteProduct={deleteProduct} items={search}/>
     } else if (path === 'users') {
-        element = <PaginatedUsers itemsPerPage={8} items={search}/>;
+        element = <PaginatedUsers deleteUser={deleteUser} items={search}/>;
     }
   } else {
     if (path === 'orders') {
@@ -113,7 +122,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else if (path === 'products') {
         element = <PaginatedProducts deleteProduct={deleteProduct} items={products}/>
     } else if (path === 'users') {
-        element = <PaginatedUsers itemsPerPage={8} items={users}/>;
+        element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
     }
   }
 
