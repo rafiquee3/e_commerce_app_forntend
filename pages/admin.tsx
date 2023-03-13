@@ -73,7 +73,16 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else {
         setOrders(result);
     }
-  }
+  };
+  const deleteProduct = (slug: string) => {
+    axios.get(`http://localhost:3000/api/products/${slug}/delete`);
+    const result = products?.filter(product => product.slug !== slug);
+    if (search) {
+        setSearch(result);
+    } else {
+        setProducts(result);
+    }
+  };
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
@@ -94,7 +103,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <PaginatedOrders deleteOrder={deleteOrder} items={search}/>
     } else if (path === 'products') {
-        element = <PaginatedProducts itemsPerPage={8} items={search}/>
+        element = <PaginatedProducts deleteProduct={deleteProduct} items={search}/>
     } else if (path === 'users') {
         element = <PaginatedUsers itemsPerPage={8} items={search}/>;
     }
@@ -102,7 +111,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <PaginatedOrders deleteOrder={deleteOrder} items={orders}/>
     } else if (path === 'products') {
-        element = <PaginatedProducts itemsPerPage={8} items={products}/>
+        element = <PaginatedProducts deleteProduct={deleteProduct} items={products}/>
     } else if (path === 'users') {
         element = <PaginatedUsers itemsPerPage={8} items={users}/>;
     }
