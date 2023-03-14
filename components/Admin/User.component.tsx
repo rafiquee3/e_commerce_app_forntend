@@ -58,12 +58,16 @@ export const PaginatedUsers = ({items, deleteUser}: {items: UserType[] | any, de
     return (
         <>          
             <User/>
+            {collection?.length ?
             <Pagination
                 pageSize={countPerPage}
                 onChange={updatePage}
                 current={currentPage}
                 total={items?.length}
             />
+            :
+            ''
+            }      
         </>
     );
 }

@@ -13,6 +13,7 @@ import { PaginatedProducts } from "@/components/Admin/Product.component";
 import { PaginatedUsers } from "@/components/Admin/User.component";
 import { UserType } from "@/helpers/types";
 import { Container, li_active } from "../styles/adminPanel"
+import { AddProduct } from '@/components/Admin/AddProduct.component';
 
 const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
@@ -68,6 +69,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const deleteOrder = (orderId: number) => {
     axios.get(`http://localhost:3000/api/orders/${orderId}/delete`);
     const result = orders?.filter(order => order.id !== orderId);
+    setInput('');
     if (search) {
         setSearch(result);
     } else {
@@ -77,6 +79,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const deleteProduct = (slug: string) => {
     axios.get(`http://localhost:3000/api/products/${slug}/delete`);
     const result = products?.filter(product => product.slug !== slug);
+    setInput('');
     if (search) {
         setSearch(result);
     } else {
@@ -86,6 +89,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const deleteUser = (login: string) => {
     axios.get(`http://localhost:3000/api/user/${login}/delete`);
     const result = users?.filter(user => user.login !== login);
+    setInput('');
     if (search) {
         setSearch(result);
     } else {
@@ -123,6 +127,8 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         element = <PaginatedProducts deleteProduct={deleteProduct} items={products}/>
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
+    } else if (path === 'addProduct') {
+        element = <AddProduct editMode={false}/>;
     }
   }
 
@@ -150,7 +156,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
                 <p>Produkty</p>
             </li>
             {
-                path === 'products' ? <li className='productMenu' onClick={() => handleClick('addProduct')}>Dodaj produkt</li> : ''
+                path === 'products' || path === 'addProduct' ? <li style={path === 'addProduct' ?  li_active : {}} className='productMenu' onClick={() => handleClick('addProduct')}>Dodaj produkt</li> : ''
             }
             <li style={path === 'users' ? li_active : {}} onClick={() => handleClick('users')}> 
                 <Image
@@ -164,7 +170,16 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         </ul>
       </div>
       <div className="right">
-        <div id="search"><div className="searchIcon"><Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/><input type="text" value={input} onChange={handleSearch}></input></div></div>
+        <div id="search">
+            { path === 'addProduct' ? 
+            <h2>Dodaj produkt</h2>
+            :
+            <div className="searchIcon">
+                <Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/>
+                <input type="text" value={input} onChange={handleSearch}></input>
+            </div>
+            }
+        </div>
         {element}
       </div>
     </Container>

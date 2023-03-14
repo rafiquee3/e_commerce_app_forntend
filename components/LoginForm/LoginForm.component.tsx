@@ -59,7 +59,7 @@ export const LoginForm: FC = (): JSX.Element => {
               Cookies.set('user', values.login);
               toast('Logged in', {style: {background: "green", color: "white"}});
               if (values.login === 'admin') {
-                return router.push('/admin');
+                //return router.push('/admin');
               }
             }
           } catch (err: any) {
