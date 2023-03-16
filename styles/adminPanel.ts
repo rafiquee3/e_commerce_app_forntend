@@ -70,6 +70,31 @@ export const Container = styled.div`
             background: white;
             border-top-right-radius: 25px;
             
+            #addProductTitle {
+                position: relative;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                button {
+                    position: absolute;
+                    right: 30px;
+                    padding-right: 30px;
+                    background-color: black;
+                    color: white;
+                    padding: 10px;
+                    width: 70px;
+                    height: 40px;
+                    border: none;
+                    border-radius: 8px;
+                }
+                button:hover {
+                    color: #22C5D1;
+                    cursor: pointer;
+                }
+            }
+
             .searchIcon {
             display: flex;
             width: 400px;   

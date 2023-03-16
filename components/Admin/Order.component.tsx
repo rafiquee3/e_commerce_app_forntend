@@ -28,14 +28,14 @@ export const PaginatedOrders = ({items, deleteOrder}: {items: (OrderType & {id: 
                   </thead>
                   <tbody>
                       {collection?.map((order: OrderType & {id: number}) => (
-                          <tr key={order.id}>
+                            <tr key={order.id}>
                               <td className="id">{order.id} </td> 
                               <td>{order.name} {order.surname}</td> 
                               <td>{order.email}</td>
                               <td>{order.totalPrice} PLN</td>
                               <td className="edit"><Link href={`/order/${order.id}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
                               <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15} onClick={() => deleteOrder(order.id)}/></td>
-                              </tr>)).reverse()
+                            </tr>)).reverse()
                       }
                   </tbody>
               </Table> 

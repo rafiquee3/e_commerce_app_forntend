@@ -5,7 +5,7 @@ import styled from "styled-components";
 const Container = styled.div`
     display: flex;
     justify-content: center;
-    font-size: 18px;
+    
     form {
         margin-top: 15px;
         textarea:focus, input:focus {
@@ -15,19 +15,21 @@ const Container = styled.div`
             display: flex;
             margin: 25px;
             width: 450px;
+            
             border-radius: 8px;
+            
             .label {
                 width: 120px;
                 text-align: center;
                 background: #DEDEDE;
-                padding: 13px;
+                padding: 9px;
                 border-top-left-radius: 8px;
                 border-bottom-left-radius: 8px;
             }
             .inputValue {
                 border: none;
                 width: 100%;
-                font-size: 18px;
+                font-size: inherit;
                 border-top-right-radius: 8px;
                 border-bottom-right-radius: 8px;
                 padding: 0 10px;
@@ -36,15 +38,15 @@ const Container = styled.div`
         #description {
             display: flex;
             flex-direction: column;
-            #descritionInput {
+            #descriptionInput {
                 border: none;
-                height: 220px;
+                height: 260px;
                 border-radius: 8px;
                 border-top-left-radius: 0px;
                 resize: none;
                 padding: 10px;
             }
-            #descritionLabel {
+            #descriptionLabel {
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
                 border-bottom-left-radius: 0px;
@@ -108,8 +110,8 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
                 ''
             }
             <div className="row" id="description">
-                <div id="descritionLabel" className="label">Opis</div>
-                <textarea id="descritionInput" name="name" value={description} onChange={handleChange}/>
+                <div id="descriptionLabel" className="label">Opis</div>
+                <textarea id="descriptionInput" name="name" value={description} onChange={handleChange}/>
             </div>
         </form>
     </Container>

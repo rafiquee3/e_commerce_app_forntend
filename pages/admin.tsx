@@ -172,7 +172,10 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
       <div className="right">
         <div id="search">
             { path === 'addProduct' ? 
-            <h2>Dodaj produkt</h2>
+            <div id="addProductTitle">
+                <h3>Dodaj produkt</h3>
+                <button>Dodaj</button>
+            </div>          
             :
             <div className="searchIcon">
                 <Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/>
