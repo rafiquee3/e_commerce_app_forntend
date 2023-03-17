@@ -17,6 +17,7 @@ export default async function handler(
         if (!data) {
             throw new Error('Error...');
         }
+        console.log('jol', typeof data.price)
         const product = await prisma.product.create({
             data: {
                 name: data.name,

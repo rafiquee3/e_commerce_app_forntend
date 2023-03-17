@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from "styled-components";
+import axios from 'axios';
+import { ProductType } from '../Product/ProductItem.component';
 
 const Container = styled.div`
     position: relative;
@@ -100,25 +102,76 @@ const Container = styled.div`
     }
 `
 export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
-    const [name, setName] = useState<string>();
-    const [slug, setSlug] = useState<string>();
-    const [category, setCategory] = useState<string>();
-    const [imgUrl, setImgUrl] = useState<string>();
-    const [price, setPrice] = useState<number>();
-    const [brand, setBrand] = useState<string>();
+    const [name, setName] = useState<string>('');
+    const [slug, setSlug] = useState<string>('');
+    const [category, setCategory] = useState<string>('');
+    const [imgUrl, setImgUrl] = useState<string>('');
+    const [price, setPrice] = useState<number>(0);
+    const [brand, setBrand] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
     const [numReviews, setNumReviews] = useState<number>(0);
-    const [countInStock, setCountInStock] = useState<number>();
-    const [description, setDescription] = useState<string>();
+    const [countInStock, setCountInStock] = useState<number>(0);
+    const [description, setDescription] = useState<string>('');
     const [isFeatured, setIsFeatured] = useState<any>(true);
     const [path, setPath] = useState<string>();
 
-    const handleChange = (e: React.SyntheticEvent) => {
-        console.log(e);
+    const handleChange = (e: any) => {
+        const value = e.target.value;
+        switch (e.target.name) {
+            case 'name':
+                setName(value);
+                break;
+            case 'brand':
+                setBrand(value);
+                break;
+            case 'slug':
+                setSlug(value);
+                break;
+            case 'foto': 
+                setImgUrl(value);
+                break;
+            case 'price':
+                setPrice(Number(value));
+                break;
+            case 'quantity':
+                setCountInStock(Number(value));
+                break;
+            case 'category':
+                setCategory(value);
+                break;
+            case 'featured':
+                setIsFeatured(value);
+                break;
+            case 'description':
+                setDescription(value);
+                break;
+        }
     }
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
         setPath('');
+
+        const data: ProductType = {
+            name,
+            slug,
+            category,
+            image: imgUrl,
+            price: Number(price),
+            brand,
+            rating,
+            numReviews,
+            countInStock: Number(countInStock),
+            description,
+            isFeatured
+          }
+          axios.post('http://localhost:3000/api/products/add', data)
+          .then((res) => {
+            toast('Produkt dodany', {style: {background: "green", color: "white"}})
+          })
+          .catch((err) => {
+            toast.error(err.response.data.error[0].error
+            , {style: {background: "red", color: "white"}});
+          });
     }
     const activePath = {
         background: "black",
@@ -126,38 +179,38 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
     }
     return (
     <Container>
-        <form onSubmit={handleSubmit} method="get">
+        <form onSubmit={handleSubmit}>
             <input id="submitBttn" type="submit" value="Dodaj"/>
             <div className="row">
                 <div className="label" style={path === "name" ? activePath : {}}>Nazwa</div>
-                <input type="text" className="inputValue" name="name" id="name" value={name} onChange={handleChange} onClick={() => setPath('name')}/>
+                <input type="text" className="inputValue" name="name" id="name" value={name || ''} onChange={handleChange} onClick={() => setPath('name')}/>
             </div>
             <div className="row">
                 <div className="label" style={path === "brand" ? activePath : {}}>Marka</div>
-                <input type="text" className="inputValue" name="name" id="name" value={brand} onChange={handleChange} onClick={() => setPath('brand')}/>
+                <input type="text" className="inputValue" name="brand" id="name" value={brand || ''} onChange={handleChange} onClick={() => setPath('brand')}/>
             </div>
             <div className="row">
                 <div className="label" style={path === "slug" ? activePath : {}}>Slug</div>
-                <input type="text" className="inputValue" name="name" id="name" value={slug} onChange={handleChange} onClick={() => setPath('slug')}/>
+                <input type="text" className="inputValue" name="slug" id="name" value={slug || ''} onChange={handleChange} onClick={() => setPath('slug')}/>
             </div>
             <div className="row">
                 <div className="label" style={path === "foto" ? activePath : {}}>Foto url</div>
-                <input type="text" className="inputValue" name="name" id="name" value={imgUrl} onChange={handleChange} onClick={() => setPath('foto')}/>
+                <input type="text" className="inputValue" name="foto" id="name" value={imgUrl || ''} onChange={handleChange} onClick={() => setPath('foto')}/>
             </div>
             <div id="priceAndQtRow">
                 <div className="row">
                     <div className="label" style={path === "price" ? activePath : {}}>Cena</div>
-                    <input type="text" className="inputValue" name="name" id="name" value={price} onChange={handleChange} onClick={() => setPath('price')}/>
+                    <input type="text" className="inputValue" name="price" id="name" value={price || ''} onChange={handleChange} onClick={() => setPath('price')}/>
                 </div>
                 <div className="row">
                     <div className="label" style={path === "quantity" ? activePath : {}}>Ilość</div>
-                    <input type="text" className="inputValue" name="name" id="name" value={countInStock} onChange={handleChange} onClick={() => setPath('quantity')}/>
+                    <input type="text" className="inputValue" name="quantity" id="name" value={countInStock || ''} onChange={handleChange} onClick={() => setPath('quantity')}/>
                 </div>
             </div>
             <div id="catAndFeatureRow">
                 <div className="row">
                     <div className="label" style={path === "category" ? activePath : {}}>Kat.</div>
-                    <select name="pets" id="pet-select" onClick={() => setPath('category')}>
+                    <select name="category" id="pet-select" onClick={() => setPath('category')}>
                         <option value="">Kategoria</option>
                         <option value="dog">Meble</option>
                         <option value="cat">Akcesoria</option>
@@ -169,7 +222,7 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
                 </div>
                 <div className="row">
                     <div className="label" style={path === "featured" ? activePath : {}}>Publikować</div>
-                    <select id="featuredSelect" name="pets" onClick={() => setPath('featured')}>
+                    <select id="featuredSelect" name="featured" onClick={() => setPath('featured')}>
                         <option value="dog">tak</option>
                         <option value="cat">nie</option>
                     </select>
@@ -177,7 +230,7 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
             </div>
             <div className="row" id="description">
                 <div id="descriptionLabel" className="label" style={path === "description" ? activePath : {}}>Opis</div>
-                <textarea id="descriptionInput" name="name" value={description} onChange={handleChange} onClick={() => setPath('description')}/>
+                <textarea id="descriptionInput" name="description" value={description || ''} onChange={handleChange} onClick={() => setPath('description')}/>
             </div>
         </form>
     </Container>
