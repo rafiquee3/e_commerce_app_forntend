@@ -174,7 +174,6 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
             { path === 'addProduct' ? 
             <div id="addProductTitle">
                 <h3>Dodaj produkt</h3>
-                <button>Dodaj</button>
             </div>          
             :
             <div className="searchIcon">
