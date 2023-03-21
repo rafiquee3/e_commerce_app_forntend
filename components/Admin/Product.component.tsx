@@ -5,7 +5,7 @@ import { Container, Table } from "../../styles/table";
 import Pagination from "rc-pagination";
 import { useEffect, useState } from "react";
 
-export const PaginatedProducts = ({items, deleteProduct}: {items: ProductType[] | any, deleteProduct: (slug: string) => void}) => {
+export const PaginatedProducts = ({items, deleteProduct, editMode}: {items: ProductType[] | any, deleteProduct: (slug: string) => void, editMode: (product: ProductType) => void}) => {
     const countPerPage = 10;
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [collection, setCollection] = useState(items?.slice(0, countPerPage));
@@ -39,7 +39,7 @@ export const PaginatedProducts = ({items, deleteProduct}: {items: ProductType[] 
                             <td>{product.name}</td> 
                             <td>{product.brand}</td>
                             <td>{product.price} PLN</td>
-                            <td className="edit"><Link href={`/order/${product.slug}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                            <td className="edit"><div id="prodEditBttn" onClick={() => editMode(product)}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></div></td>
                             <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15} onClick={() => deleteProduct(product.slug)}/></td>
                         </tr>)).reverse()
                     }

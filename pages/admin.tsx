@@ -19,6 +19,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
   const [products, setProducts] = useState<ProductType[]>();
+  const [product, setProduct] = useState<ProductType>();
   const [users, setUsers] = useState<UserType[]>();
   const [input, setInput] = useState<any>('');
   const [search, setSearch] = useState<any>();
@@ -96,6 +97,10 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         setUsers(result);
     }
   }
+  const editMode = (product: ProductType) => {
+    setProduct(product);
+    setPath('editProduct');
+  }
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
@@ -116,7 +121,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <PaginatedOrders deleteOrder={deleteOrder} items={search}/>
     } else if (path === 'products') {
-        element = <PaginatedProducts deleteProduct={deleteProduct} items={search}/>
+        element = <PaginatedProducts deleteProduct={deleteProduct} items={search} editMode={editMode}/>
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={search}/>;
     }
@@ -124,11 +129,13 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <PaginatedOrders deleteOrder={deleteOrder} items={orders}/>
     } else if (path === 'products') {
-        element = <PaginatedProducts deleteProduct={deleteProduct} items={products}/>
+        element = <PaginatedProducts deleteProduct={deleteProduct} items={products} editMode={editMode}/>
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
     } else if (path === 'addProduct') {
-        element = <AddProduct editMode={false}/>;
+        element = <AddProduct product={undefined} editMode={false}/>;
+    } else if (path === 'editProduct') {
+        element = <AddProduct product={product} editMode={true}/>;
     }
   }
 
@@ -146,7 +153,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
                 />
                 <p>Zamówienia</p>
             </li>
-            <li style={path === 'products' ? li_active : {}} onClick={() => handleClick('products')}> 
+            <li style={path === 'products' || path === 'editProduct' ? li_active : {}} onClick={() => handleClick('products')}> 
                 <Image
                     src="/product_icon.png"
                     alt="Product icon"
@@ -175,7 +182,11 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
             <div id="addProductTitle">
                 <h3>Dodaj produkt</h3>
             </div>          
-            :
+            : path === 'editProduct' ?
+            <div id="addProductTitle">
+                <h3>Edycja produktu</h3>
+            </div>
+            :          
             <div className="searchIcon">
                 <Image src={"/search_icon.png"} alt={"seacrh icon"} width={25} height={25}/>
                 <input type="text" value={input} onChange={handleSearch}></input>

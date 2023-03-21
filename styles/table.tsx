@@ -50,6 +50,10 @@ export const Table = styled.table`
        .edit {
             padding-left: 10px;
             padding-right: 10px;
+            
+            #prodEditBttn:hover {
+                cursor: pointer;
+            }
        }
        .delete {
             padding-left: 10px;
