@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import styled from "styled-components";
 import axios from 'axios';
 import { ProductType } from '../Product/ProductItem.component';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Container = styled.div`
     position: relative;
@@ -135,7 +136,7 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
                 setPrice(value);
                 break;
             case 'quantity':
-                setCountInStock(Number(value));
+                setCountInStock(value);
                 break;
             case 'category':
                 setCategory(value);
@@ -147,6 +148,17 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
                 setDescription(value);
                 break;
         }
+    }
+    const resetFields = () => {
+        setName('');
+        setBrand('');
+        setSlug('');
+        setImgUrl('');
+        setPrice(0);
+        setCountInStock(0);
+        setCategory('');
+        setIsFeatured('');
+        setDescription('');
     }
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -165,15 +177,15 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
             description,
             isFeatured: result
           }
-          console.log('data: ', data)
-        //   axios.post('http://localhost:3000/api/products/add', data)
-        //   .then((res) => {
-        //     toast('Produkt dodany', {style: {background: "green", color: "white"}})
-        //   })
-        //   .catch((err) => {
-        //     toast.error(err.response.data.error[0].error
-        //     , {style: {background: "red", color: "white"}});
-        //   });
+          axios.post('http://localhost:3000/api/products/add', data)
+          .then((res) => {
+            resetFields();
+            toast('Produkt dodany', {style: {background: "green", color: "white"}})
+          })
+          .catch((err) => {
+            toast.error(err.response.data.error[0].error
+            , {style: {background: "red", color: "white"}});
+          });
     }
     const activePath = {
         background: "black",
@@ -202,11 +214,11 @@ export const AddProduct = ({editMode}: {editMode: boolean}): JSX.Element => {
             <div id="priceAndQtRow">
                 <div className="row">
                     <div className="label" style={path === "price" ? activePath : {}}>Cena</div>
-                    <input type="text" className="inputValue" name="price" id="name" value={price || ''} pattern="[0-9]+.?[0-9]+" onChange={handleChange} onClick={() => setPath('price')} required/>
+                    <input type="text" className="inputValue" name="price" id="name" value={price || ''} pattern="^([0]|[1-9]{1}[0-9]*)\.[0-9]{2}$" onChange={handleChange} onClick={() => setPath('price')} required/>
                 </div>
                 <div className="row">
                     <div className="label" style={path === "quantity" ? activePath : {}}>Ilość</div>
-                    <input type="text" className="inputValue" name="quantity" id="name" value={countInStock || ''} onChange={handleChange} onClick={() => setPath('quantity')} required/>
+                    <input type="text" className="inputValue" name="quantity" id="name" value={countInStock || ''} pattern="[0-9]+" onChange={handleChange} onClick={() => setPath('quantity')} required/>
                 </div>
             </div>
             <div id="catAndFeatureRow">
