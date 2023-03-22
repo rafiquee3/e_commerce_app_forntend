@@ -39,7 +39,7 @@ model Product {
   slug         String  @unique
   category     String
   image        String
-  price        Int
+  price        Float
   brand        String
   rating       Float
   numReviews   Int

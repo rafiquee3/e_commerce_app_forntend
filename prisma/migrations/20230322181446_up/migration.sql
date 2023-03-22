@@ -28,7 +28,7 @@ CREATE TABLE "Product" (
     "slug" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "image" TEXT NOT NULL,
-    "price" INTEGER NOT NULL,
+    "price" REAL NOT NULL,
     "brand" TEXT NOT NULL,
     "rating" REAL NOT NULL,
     "numReviews" INTEGER NOT NULL,

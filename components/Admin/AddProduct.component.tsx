@@ -102,13 +102,13 @@ const Container = styled.div`
         }
     }
 `
-export const AddProduct = ({product, editMode}: {product: ProductType | undefined, editMode: boolean}): JSX.Element => {
+export const AddProduct = ({product, editMode, changePath}: {product: ProductType | undefined, editMode: boolean, changePath: (path: string) => void}): JSX.Element => {
     const [name, setName] = useState<string | any>(editMode ? product?.name : '');
     const [slug, setSlug] = useState<string | any>(editMode ? product?.slug : '');
-    const [category, setCategory] = useState<string | any>(editMode ? product?.category : '');
+    const [category, setCategory] = useState<string | any>(editMode ? product?.category : 'meble');
     const [imgUrl, setImgUrl] = useState<string | any>(editMode ? product?.image : '');
     const [price, setPrice] = useState<number | any>(editMode ? product?.price : 0);
-    const [brand, setBrand] = useState<string | any>(editMode ? product?.brand : 'meble');
+    const [brand, setBrand] = useState<string | any>(editMode ? product?.brand : '');
     const [rating, setRating] = useState<number | any>(editMode ? product?.rating : 0);
     const [numReviews, setNumReviews] = useState<number | any>(editMode ? product?.numReviews : 0);
     const [countInStock, setCountInStock] = useState<number | undefined>(editMode ? product?.countInStock : 0);
@@ -156,8 +156,8 @@ export const AddProduct = ({product, editMode}: {product: ProductType | undefine
         setImgUrl('');
         setPrice(0);
         setCountInStock(0);
-        setCategory('');
-        setIsFeatured('');
+        setCategory('meble');
+        setIsFeatured(true);
         setDescription('');
     }
     const handleSubmit = (e: React.SyntheticEvent) => {
@@ -169,7 +169,7 @@ export const AddProduct = ({product, editMode}: {product: ProductType | undefine
             slug,
             category,
             image: imgUrl,
-            price: Number(price),
+            price: price,
             brand,
             rating,
             numReviews,
@@ -182,7 +182,8 @@ export const AddProduct = ({product, editMode}: {product: ProductType | undefine
             axios.post('http://localhost:3000/api/products/edit', data)
             .then((res) => {
                 resetFields();
-                toast('Produkt zaktualizowano', {style: {background: "green", color: "white"}})
+                toast('Produkt zaktualizowano', {style: {background: "green", color: "white"}});
+                changePath('products');
             })
             .catch((err) => {
                 toast.error(err.response.data.error[0].error
@@ -204,19 +205,6 @@ export const AddProduct = ({product, editMode}: {product: ProductType | undefine
         background: "black",
         color: "white"
     }
-    useEffect(() => {
-        // if (editMode) {
-        //     setName(product?.name);
-        //     setBrand(value);
-        //     setSlug(value);
-        //     setImgUrl(value);
-        //     setPrice(value);
-        //     setCountInStock(value);
-        //     setCategory(value);
-        //     setIsFeatured(value);
-        //     setDescription(value);
-        // }
-    }, [editMode]);
     return (
     <Container>
         <form onSubmit={handleSubmit}>

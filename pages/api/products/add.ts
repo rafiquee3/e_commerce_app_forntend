@@ -14,6 +14,7 @@ export default async function handler(
     try {
         const data: ProductType = req.body;
         console.log(data)
+        const toFloat = Number((Math.round(data.price * 100) / 100).toFixed(2));
         if (!data) {
             throw new Error('Error...');
         }
@@ -24,7 +25,7 @@ export default async function handler(
                 slug: data.slug,
                 category: data.category,
                 image: data.image,
-                price: data.price,
+                price: toFloat,
                 brand: data.brand,
                 rating: data.rating,
                 numReviews: data.numReviews,

@@ -13,7 +13,10 @@ export default async function handler(
     }
     try {
         const data: ProductType & {id: string} = req.body;
+        const toFloat = Number((Math.round(data.price * 100) / 100).toFixed(2));
         console.log(data)
+        console.log(": ", typeof toFloat)
+        console.log('toFloat', toFloat)
         if (!data) {
             throw new Error('Error...');
         }
@@ -26,7 +29,7 @@ export default async function handler(
                 slug: data.slug,
                 category: data.category,
                 image: data.image,
-                price: data.price,
+                price: toFloat,
                 brand: data.brand,
                 rating: data.rating,
                 numReviews: data.numReviews,
@@ -34,7 +37,7 @@ export default async function handler(
                 description: data.description,
                 isFeatured: data.isFeatured
               },
-            });
+        });
         if (!product) {
             throw new Error('Error...');
         }

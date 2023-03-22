@@ -101,6 +101,9 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     setProduct(product);
     setPath('editProduct');
   }
+  const changePath = (path: string) => {
+    setPath(path);
+  }
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
@@ -133,9 +136,9 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
     } else if (path === 'addProduct') {
-        element = <AddProduct product={undefined} editMode={false}/>;
+        element = <AddProduct product={undefined} editMode={false} changePath={changePath}/>;
     } else if (path === 'editProduct') {
-        element = <AddProduct product={product} editMode={true}/>;
+        element = <AddProduct product={product} editMode={true} changePath={changePath}/>;
     }
   }
 
