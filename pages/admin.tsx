@@ -100,16 +100,21 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const editMode = (product: ProductType) => {
     setProduct(product);
     setPath('editProduct');
+    getProducts();
   }
   const changePath = (path: string) => {
     setPath(path);
+  }
+  const getProducts = () => {
+    axios.get(`http://localhost:3000/api/products/getAllProducts`)
+    .then((res) => setProducts(res.data));
+    console.log('sraka')
   }
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
 
-   axios.get(`http://localhost:3000/api/products/getAllProducts`)
-   .then((res) => setProducts(res.data));
+   getProducts();
 
    axios.get(`http://localhost:3000/api/user/getAllUsers`)
    .then((res) => setUsers(res.data));
