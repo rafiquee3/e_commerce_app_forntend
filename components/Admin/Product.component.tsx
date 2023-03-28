@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ProductType } from "../Product/ProductItem.component";
 import { Container, Table } from "../../styles/table";
 import Pagination from "rc-pagination";

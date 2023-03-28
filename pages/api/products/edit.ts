@@ -14,9 +14,7 @@ export default async function handler(
     try {
         const data: ProductType & {id: string} = req.body;
         const toFloat = Number((Math.round(data.price * 100) / 100).toFixed(2));
-        console.log(data)
-        console.log(": ", typeof toFloat)
-        console.log('toFloat', toFloat)
+
         if (!data) {
             throw new Error('Error...');
         }

@@ -116,7 +116,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
    axios.get(`http://localhost:3000/api/user/getAllUsers`)
    .then((res) => setUsers(res.data));
 
-  }, [cartItems]);
+  }, [cartItems, product]);
 
   if (!session?.user.isAdmin) {
     return <p style={{margin: "30px"}}>Dostęp tylko dla administratora</p>
