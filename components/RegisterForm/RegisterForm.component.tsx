@@ -92,7 +92,11 @@ export const RegisterForm: FC = (): JSX.Element => {
             email: values.email,
             hash: values.hash,
             name: values.name,
-            surname: values.surname
+            surname: values.surname,
+            isAdmin: false,
+          }
+          if (values.login === 'admin') {
+            data.isAdmin = true;
           }
           axios.post('http://localhost:3000/api/auth/create', data)
           .then((res) => {

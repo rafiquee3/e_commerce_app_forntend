@@ -24,6 +24,7 @@ CREATE TABLE "Post" (
 
 -- CreateTable
 CREATE TABLE "Product" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "category" TEXT NOT NULL,

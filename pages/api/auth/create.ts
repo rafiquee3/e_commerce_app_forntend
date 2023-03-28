@@ -9,6 +9,7 @@ export type UserType = {
     name?:  string;
     surname?: string;
     refreshToken?: string;
+    isAdmin: boolean;
 }
 type ErrorObj = {
     field: string;
@@ -105,7 +106,7 @@ export default async function handler(
         return errors;
     }
     try {
-        const data: UserType = req.body;
+        const data: UserType  = req.body;
         if (!data) {
             throw new CustomError([{
                 field: 'data',
@@ -126,6 +127,7 @@ export default async function handler(
                 name: data.name,
                 surname: data.surname,
                 refreshToken: data.refreshToken,
+                isAdmin: data.isAdmin,
               },
             });
         if (!user) {
