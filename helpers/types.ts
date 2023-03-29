@@ -1,4 +1,5 @@
 export type UserType = {
+    id: Number;
     login: String;
     email: String;     
     hash: String;

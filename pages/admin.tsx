@@ -14,12 +14,14 @@ import { PaginatedUsers } from "@/components/Admin/User.component";
 import { UserType } from "@/helpers/types";
 import { Container, li_active } from "../styles/adminPanel"
 import { AddProduct } from '@/components/Admin/AddProduct.component';
+import { EditUser } from '@/components/Admin/EditUser.component';
 
 const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
   const [products, setProducts] = useState<ProductType[]>();
   const [product, setProduct] = useState<ProductType>();
+  const [user, setUser] = useState<UserType>();
   const [users, setUsers] = useState<UserType[]>();
   const [input, setInput] = useState<any>('');
   const [search, setSearch] = useState<any>();
@@ -97,13 +99,21 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
         setUsers(result);
     }
   }
-  const editMode = (product: ProductType) => {
+  const editProduct = (product: ProductType) => {
     setProduct(product);
     setPath('editProduct');
     setProduct(product);
   }
+  const editUser = (user: UserType) => {
+    setUser(user);
+    setPath('editUser');
+    setUser(user);
+  }
   const updateProducts = (product: ProductType) => {
     setProduct(product);
+  }
+  const updateUsers = (user: UserType) => {
+    setUser(user);
   }
   const changePath = (path: string) => {
     setPath(path);
@@ -129,7 +139,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <PaginatedOrders deleteOrder={deleteOrder} items={search}/>
     } else if (path === 'products') {
-        element = <PaginatedProducts deleteProduct={deleteProduct} items={search} editMode={editMode}/>
+        element = <PaginatedProducts deleteProduct={deleteProduct} items={search} editMode={editProduct}/>
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={search}/>;
     }
@@ -137,13 +147,15 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     if (path === 'orders') {
         element = <PaginatedOrders deleteOrder={deleteOrder} items={orders}/>
     } else if (path === 'products') {
-        element = <PaginatedProducts deleteProduct={deleteProduct} items={products} editMode={editMode}/>
+        element = <PaginatedProducts deleteProduct={deleteProduct} items={products} editMode={editProduct}/>
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
     } else if (path === 'addProduct') {
         element = <AddProduct product={undefined} editMode={false} changePath={changePath} updateProducts={updateProducts}/>;
     } else if (path === 'editProduct') {
         element = <AddProduct product={product} editMode={true} changePath={changePath} updateProducts={updateProducts}/>;
+    } else if (path === 'editUsers') {
+        element = <EditUser user={user}  changePath={changePath} updateUsers={updateUsers}/>;
     }
   }
 

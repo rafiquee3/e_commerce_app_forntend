@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from "styled-components";
 import axios from 'axios';
@@ -180,7 +180,7 @@ export const AddProduct = ({product, editMode, changePath, updateProducts}: {pro
           }
           if (editMode) {
             data.id = product?.name;
-            axios.post('http://localhost:3000/api/products/edit', data)
+            axios.put('http://localhost:3000/api/products/edit', data)
             .then((res) => {
                 resetFields();
                 toast('Produkt zaktualizowano', {style: {background: "green", color: "white"}});
@@ -195,7 +195,8 @@ export const AddProduct = ({product, editMode, changePath, updateProducts}: {pro
             axios.post('http://localhost:3000/api/products/add', data)
             .then((res) => {
                 resetFields();
-                toast('Produkt dodany', {style: {background: "green", color: "white"}})
+                toast('Produkt dodany', {style: {background: "green", color: "white"}});
+                updateProducts(data);
             })
             .catch((err) => {
                 toast.error(err.response.data.error[0].error
@@ -210,7 +211,7 @@ export const AddProduct = ({product, editMode, changePath, updateProducts}: {pro
     return (
     <Container>
         <form onSubmit={handleSubmit}>
-            <input id="submitBttn" type="submit" value={editMode ? "Edytuj" : "Dodaj"}/>
+            <input id="submitBttn" type="submit" value={editMode ? "Zapisz" : "Dodaj"}/>
             <div className="row">
                 <div className="label" style={path === "name" ? activePath : {}}>Nazwa</div>
                 <input type="text" className="inputValue" name="name" id="name" value={name || ''} onChange={handleChange} onClick={() => setPath('name')} required/>
