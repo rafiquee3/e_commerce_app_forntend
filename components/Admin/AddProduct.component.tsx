@@ -102,7 +102,7 @@ const Container = styled.div`
         }
     }
 `
-export const AddProduct = ({product, editMode, changePath}: {product: ProductType | undefined, editMode: boolean, changePath: (path: string) => void}): JSX.Element => {
+export const AddProduct = ({product, editMode, changePath, updateProducts}: {product: ProductType | undefined, editMode: boolean, changePath: (path: string) => void, updateProducts: (product: ProductType) => void }): JSX.Element => {
     const [name, setName] = useState<string | any>(editMode ? product?.name : '');
     const [slug, setSlug] = useState<string | any>(editMode ? product?.slug : '');
     const [category, setCategory] = useState<string | any>(editMode ? product?.category : 'meble');
@@ -162,6 +162,7 @@ export const AddProduct = ({product, editMode, changePath}: {product: ProductTyp
     }
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
+  
         setPath('');
         const result: boolean = isFeatured === 'true' ? true : false;
         let data: any = {
@@ -184,6 +185,7 @@ export const AddProduct = ({product, editMode, changePath}: {product: ProductTyp
                 resetFields();
                 toast('Produkt zaktualizowano', {style: {background: "green", color: "white"}});
                 changePath('products');
+                updateProducts(data);
             })
             .catch((err) => {
                 toast.error(err.response.data.error[0].error

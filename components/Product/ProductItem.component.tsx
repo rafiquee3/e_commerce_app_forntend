@@ -5,6 +5,7 @@ import { useCartStore } from "../Store/store";
 import { useRouter } from "next/router";
 
 export type ProductType = {
+    id: number;
     name: string;
     slug: string;
     category: string;

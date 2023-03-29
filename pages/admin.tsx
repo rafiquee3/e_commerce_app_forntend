@@ -98,14 +98,17 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     }
   }
   const editMode = (product: ProductType) => {
-    // const newProducts = products?.filter(product => )
-    // setProduct(product);
-    // setPath('editProduct');
+    setProduct(product);
+    setPath('editProduct');
+    setProduct(product);
+  }
+  const updateProducts = (product: ProductType) => {
     setProduct(product);
   }
   const changePath = (path: string) => {
     setPath(path);
   }
+  
   useEffect(() => {
    axios.post(`http://localhost:3000/api/orders/getAllOrders`)
    .then((res) => setOrders(res.data));
@@ -138,9 +141,9 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
     } else if (path === 'users') {
         element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
     } else if (path === 'addProduct') {
-        element = <AddProduct product={undefined} editMode={false} changePath={changePath}/>;
+        element = <AddProduct product={undefined} editMode={false} changePath={changePath} updateProducts={updateProducts}/>;
     } else if (path === 'editProduct') {
-        element = <AddProduct product={product} editMode={true} changePath={changePath}/>;
+        element = <AddProduct product={product} editMode={true} changePath={changePath} updateProducts={updateProducts}/>;
     }
   }
 
