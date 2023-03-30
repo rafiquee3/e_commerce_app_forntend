@@ -1,11 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
 import Pagination from "rc-pagination";
 import { useEffect, useState } from "react";
-import { Container, Table } from "../../styles/table"
+import { Container, Table } from "../../styles/table";
 import { UserType } from "@/helpers/types";
 
-export const PaginatedUsers = ({items, deleteUser}: {items: UserType[] | any, deleteUser: (login: string) => void}) => {
+export const PaginatedUsers = ({items, deleteUser, editMode}: {items: UserType[] | any, deleteUser: (login: string) => void, editMode: (user: UserType) => void}) => {
     const countPerPage = 10;
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [collection, setCollection] = useState(items?.slice(0, countPerPage));
@@ -32,7 +31,7 @@ export const PaginatedUsers = ({items, deleteUser}: {items: UserType[] | any, de
                             <td>{user.name} {user.surname}</td> 
                             <td>{user.login}</td>
                             <td>{user.email}</td>
-                            <td className="edit"><Link href={`/order/${user.name}`}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></Link></td>
+                            <td className="edit"><div id="prodEditBttn" onClick={() => editMode(user)}><Image className="image" src={"/edit_icon.png"} alt="edit icon" width={15} height={15}/></div></td>
                             <td className="delete"><Image src={"/delete_icon.png"} alt="delete icon" width={15} height={15} onClick={() => deleteUser(user.login)}/></td>
                         </tr>)).reverse()
                     }

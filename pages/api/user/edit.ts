@@ -19,7 +19,9 @@ export default async function handler(
         throw new Error('Brak dostępu');
     }
     try {
+      console.log('jestem tu')
         const data = req.body;
+        console.log('data: ', data)
         const updatedUser = await prisma.user.update({
             where: {
               id: data.id
@@ -31,6 +33,7 @@ export default async function handler(
               surname: data.surname,
             },
           })
+          console.log('fiu fiu: ', updatedUser);
 
         if (!updatedUser) {
             throw new Error('User with the given id does not exist');

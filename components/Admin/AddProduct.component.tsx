@@ -1,107 +1,10 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styled from "styled-components";
 import axios from 'axios';
 import { ProductType } from '../Product/ProductItem.component';
 import 'react-toastify/dist/ReactToastify.css';
+import { Container } from '../../styles/editForm'
 
-const Container = styled.div`
-    position: relative;
-    display: flex;
-    justify-content: center;
-    
-    form {
-        margin-top: 15px;
-        textarea:focus, input:focus, select:focus {
-            outline: none;
-        }
-        #submitBttn {
-            position: absolute;
-            top: -55px;
-            right: 30px;
-            padding-right: 30px;
-            background-color: black;
-            color: white;
-            padding: 10px;
-            width: 70px;
-            height: 40px;
-            border: none;
-            border-radius: 8px;
-        }
-        #submitBttn:hover {
-                color: #22C5D1;
-                cursor: pointer;
-        }
-        #priceAndQtRow {
-            display: flex;
-            .row {
-                width: 170px;
-                margin: 0;
-                margin-right: 25px;
-            }
-        }
-        #catAndFeatureRow {
-            margin-top: 25px;
-            display: flex;
-            .row {
-                width: 190px;
-                margin: 0;
-                margin-right: 25px;
-                select {
-                    border: none;
-                    font-size: inherit;
-                    border-top-right-radius: 8px;
-                    border-bottom-right-radius: 8px;
-                    padding: 0 10px;
-                    text-align: center;
-                }
-                #featuredSelect {
-                    width:70px;
-                }
-            }
-        }
-        .row {
-            display: flex;
-            margin: 25px 0;
-            width: 450px;     
-            border-radius: 8px;
-        
-            .label {
-                width: 120px;
-                text-align: center;
-                background: #DEDEDE;
-                padding: 9px;
-                border-top-left-radius: 8px;
-                border-bottom-left-radius: 8px;
-            }
-            .inputValue {
-                border: none;
-                width: 100%;
-                font-size: inherit;
-                border-top-right-radius: 8px;
-                border-bottom-right-radius: 8px;
-                padding: 0 10px;
-            }
-        }
-        #description {
-            display: flex;
-            flex-direction: column;
-            #descriptionInput {
-                border: none;
-                height: 260px;
-                border-radius: 8px;
-                border-top-left-radius: 0px;
-                resize: none;
-                padding: 10px;
-            }
-            #descriptionLabel {
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
-                border-bottom-left-radius: 0px;
-            }
-        }
-    }
-`
 export const AddProduct = ({product, editMode, changePath, updateProducts}: {product: ProductType | undefined, editMode: boolean, changePath: (path: string) => void, updateProducts: (product: ProductType) => void }): JSX.Element => {
     const [name, setName] = useState<string | any>(editMode ? product?.name : '');
     const [slug, setSlug] = useState<string | any>(editMode ? product?.slug : '');

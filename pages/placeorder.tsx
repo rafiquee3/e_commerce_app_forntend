@@ -12,6 +12,7 @@ import { ProductType } from "@/components/Product/ProductItem.component";
 import { ProductsList } from "@/components/Product/ProductsList.component";
 import axios from "axios";
 import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Container = styled.div`
   .summary {

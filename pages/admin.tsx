@@ -15,10 +15,12 @@ import { UserType } from "@/helpers/types";
 import { Container, li_active } from "../styles/adminPanel"
 import { AddProduct } from '@/components/Admin/AddProduct.component';
 import { EditUser } from '@/components/Admin/EditUser.component';
+import { EditOrder } from '@/components/Admin/EditOrder.component';
 
 const Admin: NextPageWithLayout = (): JSX.Element => {
   const {cartItems} = useCartStore();
   const [orders, setOrders] = useState<(OrderType & {id: number})[]>();
+  const [order, setOrder] = useState<OrderType>();
   const [products, setProducts] = useState<ProductType[]>();
   const [product, setProduct] = useState<ProductType>();
   const [user, setUser] = useState<UserType>();
@@ -102,18 +104,23 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
   const editProduct = (product: ProductType) => {
     setProduct(product);
     setPath('editProduct');
-    setProduct(product);
   }
   const editUser = (user: UserType) => {
     setUser(user);
-    setPath('editUser');
-    setUser(user);
+    setPath('editUsers');
+  }
+  const editOrder = (order: OrderType) => {
+    setOrder(order);
+    setPath('editOrders');
   }
   const updateProducts = (product: ProductType) => {
     setProduct(product);
   }
   const updateUsers = (user: UserType) => {
     setUser(user);
+  }
+  const updateOrders = (order: OrderType) => {
+    setOrder(order);
   }
   const changePath = (path: string) => {
     setPath(path);
@@ -129,7 +136,7 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
    axios.get(`http://localhost:3000/api/user/getAllUsers`)
    .then((res) => setUsers(res.data));
 
-  }, [cartItems, product]);
+  }, [cartItems, product, user]);
 
   if (!session?.user.isAdmin) {
     return <p style={{margin: "30px"}}>Dostęp tylko dla administratora</p>
@@ -137,26 +144,28 @@ const Admin: NextPageWithLayout = (): JSX.Element => {
 
   if (search) {
     if (path === 'orders') {
-        element = <PaginatedOrders deleteOrder={deleteOrder} items={search}/>
+        element = <PaginatedOrders deleteOrder={deleteOrder} items={search} editMode={editOrder}/>
     } else if (path === 'products') {
         element = <PaginatedProducts deleteProduct={deleteProduct} items={search} editMode={editProduct}/>
     } else if (path === 'users') {
-        element = <PaginatedUsers deleteUser={deleteUser} items={search}/>;
+        element = <PaginatedUsers deleteUser={deleteUser} items={search} editMode={editUser}/>;
     }
   } else {
     if (path === 'orders') {
-        element = <PaginatedOrders deleteOrder={deleteOrder} items={orders}/>
+        element = <PaginatedOrders deleteOrder={deleteOrder} items={orders} editMode={editOrder}/>
     } else if (path === 'products') {
         element = <PaginatedProducts deleteProduct={deleteProduct} items={products} editMode={editProduct}/>
     } else if (path === 'users') {
-        element = <PaginatedUsers deleteUser={deleteUser} items={users}/>;
+        element = <PaginatedUsers deleteUser={deleteUser} items={users} editMode={editUser}/>;
     } else if (path === 'addProduct') {
         element = <AddProduct product={undefined} editMode={false} changePath={changePath} updateProducts={updateProducts}/>;
     } else if (path === 'editProduct') {
         element = <AddProduct product={product} editMode={true} changePath={changePath} updateProducts={updateProducts}/>;
     } else if (path === 'editUsers') {
         element = <EditUser user={user}  changePath={changePath} updateUsers={updateUsers}/>;
-    }
+    } else if (path === 'editOrders') {
+      element = <EditOrder order={order}  changePath={changePath} updateOrders={updateOrders}/>;
+  }
   }
 
   return (

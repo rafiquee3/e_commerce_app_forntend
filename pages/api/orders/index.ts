@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient();
 export type OrderType = {
+    id: Number;
+    products: string;
     paymentMethod: string;
     itemsPrice:     number;
     shippingPrice:  number;
@@ -14,6 +16,7 @@ export type OrderType = {
     city:           string;
     postal:         string;
     telephone:      number;
+    authorLogin:    string;
 }
 export default async function handler(
   req: NextApiRequest,
